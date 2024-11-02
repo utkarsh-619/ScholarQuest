@@ -1,14 +1,17 @@
-// import SignIn from "./pages/auth/singin";
-// import SideMenu from "./components/sidemenu";
-import Redeem from "./pages/Redeem";
+// App.js
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Redeem from './pages/Redeem';
+import Signin from './pages/auth/singin';
 
 function App() {
   return (
-    <div>
-      {/* <SignIn />  */}
-      {/* <SideMenu /> */}
-      <Redeem />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/redeem" element={<Redeem />} />
+        <Route path="/signup" element={<Signin />} />
+      </Routes>
+    </Router>
   );
 }
 
