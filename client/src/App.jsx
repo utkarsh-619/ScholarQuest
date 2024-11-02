@@ -1,11 +1,13 @@
-import SignIn from "./pages/auth/singin";
+// import SignIn from "./pages/auth/singin";
 // import SideMenu from "./components/sidemenu";
+import Redeem from "./pages/Redeem";
 
 function App() {
   return (
     <div>
-      <SignIn /> 
+      {/* <SignIn />  */}
       {/* <SideMenu /> */}
+      <Redeem />
     </div>
   );
 }
