@@ -1,16 +1,66 @@
 import React, { useState } from "react";
-import { useLocation,Link } from 'react-router-dom';
+import { useLocation,Link, useNavigate } from 'react-router-dom';
+import axios from "axios";
 
-const signin = () => {
+const Signin = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     console.log(location);
     const [isLogIn, setIsLogIn] = useState((location.pathname === "/signin"));
+    const [formData, setFormData] = useState({
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    const [profilePhoto, setProfilePhoto] = useState(null);
 
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({...formData, [name]: value });
+    }
+
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+          const endpoint = isLogIn ? "/signin" : "/signup";
+          const data = new FormData();
+  
+          // Append common data
+          data.append('username', formData.username);
+          data.append('password', formData.password);
+  
+          // Append email and profile photo if signing up
+          if (!isLogIn) {
+              data.append('email', formData.email);
+              if (profilePhoto) {
+                  data.append('profilePhoto', profilePhoto); // Append the selected profile photo
+              }
+          }
+  
+          // Send the request
+          const response = await axios.post(`http://localhost:8000/api/v1/users/register`, data, {
+              headers: {
+                  'Content-Type': 'multipart/form-data', // Set the content type for FormData
+              },
+          });
+  
+          console.log("Response:", response.data);
+  
+          if (response.status === 200) {
+              // Redirect the user upon successful sign-in or sign-up
+              navigate("/dashboard");  // or wherever you want to navigate
+          }
+      } catch (error) {
+          console.error("Error during authentication:", error);
+      }
+  };
+  
   return (
     <>
       <section className="bg-white dark:bg-gray-900">
         <div className="container flex items-center justify-center min-h-screen px-6 mx-auto">
-          <form className="w-full max-w-md">
+          <form onSubmit={handleSubmit} className="w-full max-w-md">
             <div className="flex justify-center mx-auto">
               <img
                 className="w-32"
@@ -61,6 +111,9 @@ const signin = () => {
 
               <input
                 type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleInputChange}
                 className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Username"
               />
@@ -87,7 +140,12 @@ const signin = () => {
 
               <h2 className="mx-3 text-gray-400">Profile Photo</h2>
 
-              <input id="dropzone-file" type="file" className="hidden" />
+              <input 
+                id="dropzone-file" 
+                type="file" 
+                className="hidden" 
+                onChange={(e) => setProfilePhoto(e.target.files[0])} 
+              />
             </label>}
 
             {!isLogIn && <div className="relative flex items-center mt-6">
@@ -110,6 +168,9 @@ const signin = () => {
 
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
                 className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Email address"
               />
@@ -135,6 +196,9 @@ const signin = () => {
 
               <input
                 type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
                 className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Password"
               />
@@ -160,13 +224,16 @@ const signin = () => {
 
               <input
                 type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
                 className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Confirm Password"
               />
             </div>}
 
             <div className="mt-6">
-              <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+              <button type="submit" className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
                 {isLogIn ? "Sign In" : "Sign Up"}
               </button>
 
@@ -188,4 +255,4 @@ const signin = () => {
   );
 };
 
-export default signin;
+export default Signin;
