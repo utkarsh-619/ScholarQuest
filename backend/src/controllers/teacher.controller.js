@@ -7,9 +7,9 @@ import jwt from "jsonwebtoken"
 
 
 
-const generateAccessAndRefreshTokens = async(userId)=>{
+const generateAccessAndRefreshTokens = async(teacherId)=>{
   try {
-    const teacher = await Teacher.findById(userId)
+    const teacher = await Teacher.findById(teacherId)
     const accessToken = teacher.generateAccessToken()
     const refreshToken = teacher.generateRefreshToken()
 
@@ -26,7 +26,7 @@ const generateAccessAndRefreshTokens = async(userId)=>{
 
 
 
-const registerUser = asyncHandler (async(req,res) => {
+const registerTeacher = asyncHandler (async(req,res) => {
   // take data from teacher;
   // validate the data taken from the teacher.
   // check if teacher already exist.
@@ -42,11 +42,11 @@ const registerUser = asyncHandler (async(req,res) => {
     throw new ApiError(400,"All fields are required.")
   }
   
-  const existedUser = await Teacher.findOne({
+  const existedTeacher = await Teacher.findOne({
     $or: [{ username },{ email }]
   })
 
-  if(existedUser){
+  if(existedTeacher){
     throw new ApiError(409, "Teacher with email or username already exist.")
   }
 
@@ -71,21 +71,21 @@ const registerUser = asyncHandler (async(req,res) => {
 
   })
 
-  const createduser = await Teacher.findById(teacher._id).select(
+  const createdteacher = await Teacher.findById(teacher._id).select(
     "-password -refreshToken"
   )
   
-  if(!createduser){
+  if(!createdteacher){
     throw new ApiError(500,"Something went wrong while registering the teacher")
   }
 
   return res.status(201).json(
-    new ApiResponse(200, createduser,"Teacher registered Successfully")
+    new ApiResponse(200, createdteacher,"Teacher registered Successfully")
   )
 
 })
 
-const loginUser = asyncHandler (async(req,res) => {
+const loginTeacher = asyncHandler (async(req,res) => {
   //if local refresh token is matched with db then login 
   // else
   //take input from teacher
@@ -97,7 +97,7 @@ const loginUser = asyncHandler (async(req,res) => {
   const {email, username, password} = req.body
 
   if(!username && !email){
-    throw new ApiError(400,"Username or email is")
+    throw new ApiError(400,"Teachername or email is")
   }
 
   const teacher = await Teacher.findOne({
@@ -117,7 +117,7 @@ const loginUser = asyncHandler (async(req,res) => {
   const {accessToken,refreshToken} = await generateAccessAndRefreshTokens(teacher._id)
 
   
-  const loggedInUser = await Teacher.findById(teacher._id).select("-password -refreshToken")
+  const loggedInTeacher = await Teacher.findById(teacher._id).select("-password -refreshToken")
 
   const options = {
     httpOnly : true,
@@ -132,7 +132,7 @@ const loginUser = asyncHandler (async(req,res) => {
     new ApiResponse(
       200,
       {
-        teacher: loggedInUser,accessToken,refreshToken
+        teacher: loggedInTeacher,accessToken,refreshToken
       },
       "Teacher logged in Successfully"
     )
@@ -141,7 +141,7 @@ const loginUser = asyncHandler (async(req,res) => {
 })  
 
 
-const logoutUser = asyncHandler(async(req,res) => {
+const logoutTeacher = asyncHandler(async(req,res) => {
   await Teacher.findByIdAndUpdate(
     req.teacher._id,
     {
@@ -217,4 +217,4 @@ const refreshAccessToken = asyncHandler(async (req,res)=>{
 })
 
 
-export {registerUser,loginUser,logoutUser,refreshAccessToken}
+export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken}
