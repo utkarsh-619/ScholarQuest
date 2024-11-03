@@ -1,7 +1,6 @@
 import mongoose, {mongo, Schema} from "mongoose";
 import jwt from "jsonwebtoken" //Jwt is a bearer token.
 import bcrypt from "bcrypt"
-import { object } from "mongoose/lib/utils";
 
 
 const userSchema = new Schema({
@@ -16,7 +15,7 @@ const userSchema = new Schema({
 
   course : {
     type : String,
-    required : true,
+    // required : true,
     lowercase : true,
     trim : true,
     index : true,
@@ -55,7 +54,7 @@ const userSchema = new Schema({
   
     fullName : {
       type : String,
-      required : true,
+      // required : true,
       trim : true,
       index : true,
     },
