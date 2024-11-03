@@ -1,6 +1,7 @@
 import mongoose, {mongo, Schema} from "mongoose";
 import jwt from "jsonwebtoken" //Jwt is a bearer token.
 import bcrypt from "bcrypt"
+import { object } from "mongoose/lib/utils";
 
 
 const userSchema = new Schema({
@@ -12,6 +13,38 @@ const userSchema = new Schema({
     trim : true,
     index : true,
   },
+
+  course : {
+    type : String,
+    required : true,
+    lowercase : true,
+    trim : true,
+    index : true,
+  },
+
+  assignments: [
+    {
+      subjectName: {
+        type: String,
+        required: true,
+        trim: true, // Removes any extra spaces
+      },
+      assignmentName: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      dueDate: {
+        type: Date,
+        required: true,
+      },
+      status: {
+        type: String,
+        default: 'pending',
+      },
+    },
+  ],
+
   email : {
     type : String,
     required : true,
@@ -20,13 +53,13 @@ const userSchema = new Schema({
     trim : true,
   },
   
-  fullName : {
-    type : String,
-    required : true,
-    trim : true,
-    index : true,
-  },
-
+    fullName : {
+      type : String,
+      required : true,
+      trim : true,
+      index : true,
+    },
+  
   profilePhoto : {
     type : String, // Cloudnary url
     required : true,

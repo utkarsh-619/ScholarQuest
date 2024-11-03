@@ -12,6 +12,15 @@ const teacherSchema = new Schema({
     trim : true,
     index : true,
   },
+
+  courses : [
+    {
+      type : String,
+      lowercase : true,
+      trim : true,
+    }
+  ],
+
   email : {
     type : String,
     required : true,
