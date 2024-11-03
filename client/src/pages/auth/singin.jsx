@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useLocation,Link } from 'react-router-dom';
 
 const signin = () => {
-
-    const [isLogIn, setIsLogIn] = useState(0);
+    const location = useLocation();
+    console.log(location);
+    const [isLogIn, setIsLogIn] = useState((location.pathname === "/signin"));
 
   return (
     <>
@@ -18,25 +20,25 @@ const signin = () => {
             </div>
 
             <div className="flex items-center justify-center mt-6">
-              <a
-                href="#"
+              <Link
+                to="/signin"
                 className={` w-1/3 pb-4 font-medium text-center ${(!isLogIn)? "text-gray-500 capitalize border-b dark:border-gray-400 dark:text-gray-300" :  "text-gray-800 capitalize border-b-2 border-blue-500 dark:border-blue-400 dark:text-white" }`}
                 onClick={() => {
                     setIsLogIn(1)
                 }}
               >
                 sign in
-              </a>
+              </Link>
 
-              <a
-                href="#"
+              <Link
+                to="/signup"
                 className={` w-1/3 pb-4 font-medium text-center ${(isLogIn)? "text-gray-500 capitalize border-b dark:border-gray-400 dark:text-gray-300" :  "text-gray-800 capitalize border-b-2 border-blue-500 dark:border-blue-400 dark:text-white" }`}
                 onClick={() => {
                     setIsLogIn(0)
                 }}
               >
                 sign up
-              </a>
+              </Link>
             </div>
 
             <div className="relative flex items-center mt-8">
@@ -171,12 +173,12 @@ const signin = () => {
               <div className="mt-6 text-center " onClick={() => {
                     setIsLogIn(!isLogIn)
               }}>
-                <a
-                  href="#"
+                <Link
+                  to={(isLogIn)?"/signin":"/signup"}
                   className="text-sm text-blue-500 hover:underline dark:text-blue-400"
                 >
                   {isLogIn ? "don't have account" : "Already have an account?"}
-                </a>
+                </Link>
               </div>
             </div>
           </form>
