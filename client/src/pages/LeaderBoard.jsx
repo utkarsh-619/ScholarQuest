@@ -1,8 +1,12 @@
 import React from 'react'
+import SideMenu from '../components/SideMenu';
 
 const LeaderBoard = () => {
   return (
-    <div>LeaderBoard</div>
+    <div className='flex'>
+        <SideMenu />
+        LeaderBoard
+    </div>
   )
 }
 

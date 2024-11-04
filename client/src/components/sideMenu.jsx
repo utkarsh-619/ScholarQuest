@@ -1,16 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { RiCopperCoinFill } from "react-icons/ri";
 
-const sideMenu = () => {
+const SideMenu = () => {
   return (
-    <>
-      <aside className="flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
+    <div className="mr-64">
+      <aside className="fixed flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
         <div className="flex justify-between items-center">
           <div>
-            <Link to="/">
+            <NavLink to="/">
               <img className="w-16" src="/image/logo.png" alt="Logo" />
-            </Link>
+            </NavLink>
           </div>
 
           <div className="flex items-center">
@@ -18,6 +18,7 @@ const sideMenu = () => {
             <h3 className="text-white mr-2">10</h3>
           </div>
         </div>
+
         <div className="relative mt-6">
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
             <svg
@@ -28,9 +29,9 @@ const sideMenu = () => {
               <path
                 d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></path>
             </svg>
           </span>
@@ -44,9 +45,15 @@ const sideMenu = () => {
 
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
-            <Link
+            <NavLink
               to="/dashboard"
-              className="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-md dark:bg-gray-800 dark:text-gray-200"
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 mt-5 transition-colors transform rounded-md ${
+                  isActive
+                    ? "text-gray-200 bg-gray-100 dark:bg-gray-800 font-bold"
+                    : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+                }`
+              }
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
                 <path
@@ -58,11 +65,17 @@ const sideMenu = () => {
                 />
               </svg>
               <span className="mx-4 font-medium">Dashboard</span>
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/leaderboard"
-              className="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 mt-5 transition-colors transform rounded-md ${
+                  isActive
+                    ? "text-gray-200 bg-gray-100 dark:bg-gray-800 font-bold"
+                    : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+                }`
+              }
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
                 <path
@@ -81,11 +94,17 @@ const sideMenu = () => {
                 />
               </svg>
               <span className="mx-4 font-medium">LeaderBoard</span>
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/assignment"
-              className="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 mt-5 transition-colors transform rounded-md ${
+                  isActive
+                    ? "text-gray-200 bg-gray-100 dark:bg-gray-800 font-bold"
+                    : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+                }`
+              }
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
                 <path
@@ -97,22 +116,21 @@ const sideMenu = () => {
                 />
               </svg>
               <span className="mx-4 font-medium">Assignment</span>
-            </Link>
+            </NavLink>
 
-            <Link
+            <NavLink
               to="/redeem"
-              className="flex items-center px-4 py-2 mt-5 text-gray-600 transition-colors duration-300 transform rounded-md dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+              className={({ isActive }) =>
+                `flex items-center px-4 py-2 mt-5 transition-colors transform rounded-md ${
+                  isActive
+                    ? "text-gray-200 bg-gray-100 dark:bg-gray-800 font-bold"
+                    : "text-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+                }`
+              }
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
                 <path
-                  d="M10.3246 4.31731C10.751 2.5609 13.249 2.5609 13.6754 4.31731C13.9508 5.45193 15.2507 5.99038 16.2478 5.38285C17.7913 4.44239 19.5576 6.2087 18.6172 7.75218C18.0096 8.74925 18.5481 10.0492 19.6827 10.3246C21.4391 10.751 21.4391 13.249 19.6827 13.6754C18.5481 13.9508 18.0096 15.2507 18.6172 16.2478C19.5576 17.7913 17.7913 19.5576 16.2478 18.6172C15.2507 18.0096 13.9508 18.5481 13.6754 19.6827C13.249 21.4391 10.751 21.4391 10.3246 19.6827C10.0492 18.5481 8.74926 18.0096 7.75219 18.6172C6.2087 19.5576 4.44239 17.7913 5.38285 16.2478C5.99038 15.2507 5.45193 13.9508 4.31731 13.6754C2.5609 13.249 2.5609 10.751 4.31731 10.3246C5.45193 10.0492 5.99037 8.74926 5.38285 7.75218C4.44239 6.2087 6.2087 4.44239 7.75219 5.38285C8.74926 5.99037 10.0492 5.45193 10.3246 4.31731Z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M12 8V12L15 15"
+                  d="M10.3246 4.31731C10.751 2.5609 13.249 2.5609 13.6754 4.31731C13.9508 5.45193 15.2507 5.99038 16.2478 5.38285C17.7913 4.44239 19.5576 6.2087 18.6172 7.75218C18.0096 8.74925 18.5481 10.0492 19.6827 10.3246C21.4391 10.751 21.4391 13.249 19.6827 13.6754C18.5481 13.9508 18.0096 15.2507 18.6172 16.2478C19.5576 17.7913 17.7913 19.5576 16.2478 18.6172C15.2507 18.0096 13.951 18.5481 13.6754 19.6827C13.249 21.4391 10.751 21.4391 10.3246 19.6827C10.0492 18.5481 8.74925 18.0096 7.75218 18.6172C6.2087 19.5576 4.44239 17.7913 5.38285 16.2478C5.99038 15.2507 5.45193 13.951 4.31731 13.6754C2.5609 13.249 2.5609 10.751 4.31731 10.3246C5.45193 10.0492 5.99038 8.74925 5.38285 7.75218C4.44239 6.2087 6.2087 4.44239 7.75218 5.38285C8.74925 5.99038 10.0492 5.45193 10.3246 4.31731Z"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
@@ -120,8 +138,9 @@ const sideMenu = () => {
                 />
               </svg>
               <span className="mx-4 font-medium">Redeem</span>
-            </Link>
+            </NavLink>
 
+            {/* Add horizontal rule and settings link */}
             <hr className="my-6 border-gray-200 dark:border-gray-600" />
 
             <Link
@@ -147,7 +166,6 @@ const sideMenu = () => {
               <span className="mx-4 font-medium">Settings</span>
             </Link>
           </nav>
-
           <Link to="/profile" className="flex items-center px-4 -mx-2">
             <img
               className="object-cover mx-2 rounded-full h-9 w-9"
@@ -160,8 +178,8 @@ const sideMenu = () => {
           </Link>
         </div>
       </aside>
-    </>
+    </div>
   );
 };
 
-export default sideMenu;
+export default SideMenu;

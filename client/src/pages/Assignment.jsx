@@ -1,8 +1,12 @@
 import React from 'react'
+import SideMenu from '../components/SideMenu';
 
 const Assignment = () => {
   return (
-    <div>Assignment</div>
+    <div className='flex'>
+        <SideMenu />
+        Assignment
+    </div>
   )
 }
 

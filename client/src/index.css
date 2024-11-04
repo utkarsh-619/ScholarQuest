@@ -7,3 +7,23 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #27374D; /* Darkest shade for the track */
+}
+
+/* Scrollbar Thumb */
+::-webkit-scrollbar-thumb {
+    background-color: #526D82; /* Medium-dark shade for the thumb */
+    border-radius: 20px;
+    border: 2px solid #27374D; /* Add border to match track and give a gap effect */
+}
+
+/* Scrollbar Thumb Hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #9DB2BF; /* Slightly lighter shade on hover */
+}
