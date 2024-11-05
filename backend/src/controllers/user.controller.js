@@ -230,16 +230,19 @@ const detailsUser = asyncHandler (async(req,res) => {
   if(profilePhotoLocalPath){
     profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
   }
-  await User.updateOne({
-    _id : req.user._id
-  },{
-    fname : fname,
-    lname : lname,
-    course : course,
-    registrationNumber : registrationNumber,
-    phonenumber : phonenumber,
-    profilePhoto : profilePhoto ? profilePhoto.url : "" ,
-  })
+  const updateData = {};
+
+  // Only add properties to updateData if they are truthy
+  if (fname) updateData.fname = fname;
+  if (lname) updateData.lname = lname;
+  if (course) updateData.course = course;
+  if (registrationNumber) updateData.registrationNumber = registrationNumber;
+  if (phonenumber) updateData.phonenumber = phonenumber;
+  if (profilePhoto) updateData.profilePhoto = profilePhoto.url;
+
+  // Perform the update
+  await User.updateOne({ _id: req.user._id }, updateData);
+
   const createduser = await User.findById(req.user._id).select(
     "-password -refreshToken"
   )
