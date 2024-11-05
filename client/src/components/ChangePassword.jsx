@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+
 
 function ChangePassword() {
+
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setPasswordData((prev) => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8000/api/v1/users/changepassword", passwordData);
+      alert("Password updated successfully!");
+    } catch (error) {
+      console.error("Error updating password:", error);
+      alert("Failed to update password.");
+    }
+  };
+
   return (
     <>
       <div className="flex mb-6">
@@ -14,7 +42,7 @@ function ChangePassword() {
         </div>
 
         <div className="w-2/5">
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <label
                 className="block text-gray-200 text-sm mb-1"
@@ -25,6 +53,8 @@ function ChangePassword() {
               <input
                 type="password"
                 id="currentPassword"
+                value={passwordData.currentPassword}
+                onChange={handleChange}
                 className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -39,6 +69,8 @@ function ChangePassword() {
               <input
                 type="password"
                 id="newPassword"
+                value={passwordData.newPassword}
+                onChange={handleChange}
                 className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -53,6 +85,8 @@ function ChangePassword() {
               <input
                 type="password"
                 id="confirmPassword"
+                value={passwordData.confirmPassword}
+                onChange={handleChange}
                 className="w-full px-3 py-2 rounded bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
