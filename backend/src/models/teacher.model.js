@@ -38,7 +38,7 @@ const teacherSchema = new Schema({
 
   profilePhoto : {
     type : String, // Cloudnary url
-    required : true,
+    // required : true,
   },
 
   password : {
