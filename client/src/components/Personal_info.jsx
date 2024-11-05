@@ -22,14 +22,18 @@ const PersonaInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/users/details", user);
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/details",
+        user,
+        { credentials: true } // Enable cookies in request
+      );
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
+      // alert("Failed to update profile.");
     }
   };
-
+  
   return (
     <div className="flex mb-6">
       <div className="w-2/5 lg:pl-20">
