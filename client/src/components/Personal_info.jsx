@@ -114,6 +114,23 @@ const PersonaInfo = () => {
               />
             </div>
 
+            {/* <div>
+              <label
+                htmlFor="phone"
+                className="block text-sm text-gray-200 mb-1"
+              >
+                Phone Number
+              </label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                value={user.phone}
+                onChange={handleChange}
+                className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div> */}
+
             <div>
               <label
                 htmlFor="phone_number"
@@ -124,7 +141,7 @@ const PersonaInfo = () => {
               <input
                 type="tel"
                 id="phone"
-                name="phone_number"
+                name="phone"
                 value={user.phone}
                 onChange={handleChange}
                 className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
