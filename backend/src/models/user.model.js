@@ -21,6 +21,21 @@ const userSchema = new Schema({
     index : true,
   },
 
+  registrationNumber : {
+    type : String,
+    // required : true,
+    lowercase : true,
+    trim : true,
+    index : true,
+  },
+  phonenumber : {
+    type : String,
+    // required : true,
+    lowercase : true,
+    trim : true,
+    index : true,
+  },
+
   assignments: [
     {
       subjectName: {
@@ -52,7 +67,14 @@ const userSchema = new Schema({
     trim : true,
   },
   
-    fullName : {
+    fname : {
+      type : String,
+      // required : true,
+      trim : true,
+      index : true,
+    },
+
+    lname : {
       type : String,
       // required : true,
       trim : true,

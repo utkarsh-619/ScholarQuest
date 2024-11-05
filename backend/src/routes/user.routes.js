@@ -24,6 +24,11 @@ router.route("/logout").post(verifyJWT, logoutUser)
 
 router.route("/refresh-token").post(refreshAccessToken)
 
-router.route("/details").post(detailsUser)
+router.route("/details").post(upload.fields([
+  {
+    name: "profilePhoto",
+    maxCount: 1,
+  }
+]),verifyJWT,detailsUser)
 
 export default router
