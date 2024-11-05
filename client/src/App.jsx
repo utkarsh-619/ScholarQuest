@@ -6,7 +6,7 @@ import Assignment from './pages/Assignment';
 import Redeem from './pages/Redeem';
 // import Settings from './pages/Settings';
 import Signin from './pages/auth/singin';
-// import Profile from './pages/Profile';
+import Profile from './pages/Profile';
 // import SideMenu from './components/SideMenu';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
         {/* <Route path="/settings" element={<Settings />} /> */}
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signin />} />
-        {/* <Route path="/profile" element={<Profile />} /> */}
+        <Route path="/profile" element={<Profile />} />
         </Routes>
     </Router>
   );
