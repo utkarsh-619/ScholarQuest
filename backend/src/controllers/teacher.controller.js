@@ -50,7 +50,7 @@ const registerTeacher = asyncHandler (async(req,res) => {
     throw new ApiError(409, "Teacher with email or username already exist.")
   }
 
-  const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
+  // const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
 
   if(!profilePhotoLocalPath){
     throw new ApiError(400,"profilePhoto file is required.");
