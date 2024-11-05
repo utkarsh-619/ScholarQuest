@@ -12,7 +12,7 @@ const Signin = () => {
     password: "",
     confirmPassword: "",
   });
-  const [profilePhoto, setProfilePhoto] = useState(null);
+  // const [profilePhoto, setProfilePhoto] = useState(null);
   const [userType, setUserType] = useState(""); // State for user type
 
   const handleInputChange = (e) => {
@@ -24,41 +24,41 @@ const Signin = () => {
     setUserType(e.target.value);
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Prepare data object
+    const data = {
+      username: formData.username,
+      password: formData.password,
+      userType,
+    };
+
+    // Add email if signing up
+    if (!isLogIn) {
+      data.email = formData.email;
+    }
+
     try {
-      const endpoint = isLogIn ? "/signin" : "/signup";
-      const data = new FormData();
-
-      // Append common data
-      data.append("username", formData.username);
-      data.append("password", formData.password);
-      data.append("userType", userType); // Append user type
-
-      // Append email and profile photo if signing up
-      if (!isLogIn) {
-        data.append("email", formData.email);
-        if (profilePhoto) {
-          data.append("profilePhoto", profilePhoto); // Append the selected profile photo
-        }
-      }
-
-      // Send the request
+      const endpoint = isLogIn ? "/login" : "/register";
+      
+      // Send request
       const response = await axios.post(
-        `http://localhost:8000/api/v1/users/register`,
+        `http://localhost:8000/api/v1/users${endpoint}`,
         data,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Set the content type for FormData
+            "Content-Type": "application/json",
           },
         }
       );
 
       console.log("Response:", response.data);
 
-      if (response.status === 200) {
-        // Redirect the user upon successful sign-in or sign-up
-        navigate("/dashboard"); // or wherever you want to navigate
+      if (response.status >= 200 && response.status < 300) {
+        // Redirect upon successful sign-in or sign-up
+        navigate("/dashboard");
       }
     } catch (error) {
       console.error("Error during authentication:", error);
