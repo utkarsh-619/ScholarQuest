@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 
 
@@ -11,6 +11,10 @@ const PersonaInfo = () => {
     course: "Pacific Standard Time",
   });
 
+  const [profilePhoto, setAvatar] = useState();
+
+  const fileInputRef = useRef();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
@@ -19,21 +23,40 @@ const PersonaInfo = () => {
     }));
   };
 
+  const handleAvatarChange = (e) => {
+    setAvatar(e.target.files[0]);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("profilePhoto", profilePhoto);
+    formData.append("fname", user.fname);
+    formData.append("lname", user.lname);
+    formData.append("phonenumber", user.phonenumber);
+    formData.append("registrationNumber", user.registrationNumber);
+    formData.append("course", user.course);
+
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/details",
-        user,
-        { withCredentials: true } // Enable cookies in request
+        formData, // send formData instead of user
+        {
+          withCredentials: true, // Enable cookies in request
+          headers: {
+            "Content-Type": "multipart/form-data", // important for file uploads
+          },
+        }
       );
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      // alert("Failed to update profile.");
+      alert("Failed to update profile.");
     }
   };
-  
+
+
   return (
     <div className="flex mb-6">
       <div className="w-2/5 lg:pl-20">
@@ -50,15 +73,24 @@ const PersonaInfo = () => {
         <div className="flex items-center mb-6">
           <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden">
             <img
-              src="https://via.placeholder.com/64"
+              src={profilePhoto ? URL.createObjectURL(profilePhoto) : "https://via.placeholder.com/64"}
               alt="Avatar"
               className="object-cover w-full h-full"
             />
           </div>
           <div>
-            <h3 className="ml-6 mb-2 text-white font-semibold">John Doe</h3>
-            <button className="ml-6 px-4 py-1 bg-gray-700 text-sm text-gray-300 rounded hover:bg-gray-600">
-              Change avatar
+            <h3 className="ml-6 mb-2 text-white font-semibold">Kushagra Kumar</h3>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              ref={fileInputRef}
+              style={{ display: "none" }}
+            />
+            <button
+              onClick={() => fileInputRef.current.click()}
+              className="ml-6 px-4 py-1 bg-gray-700 text-sm text-gray-300 rounded hover:bg-gray-600">
+              Change profilePhoto
             </button>
           </div>
         </div>

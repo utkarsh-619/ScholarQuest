@@ -33,11 +33,11 @@ const registerTeacher = asyncHandler (async(req,res) => {
   // push data in the data base;
   // create 
 
-  const {username,email,fullName,password} = req.body
+  const {username,role,email,password} = req.body
   // console.log("email ",email);
 
   if(
-    [fullName , email, username, password].some((field) => field?.trim() ==="")
+    [email, role,username, password].some((field) => field?.trim() ==="")
   ){
     throw new ApiError(400,"All fields are required.")
   }
@@ -52,19 +52,20 @@ const registerTeacher = asyncHandler (async(req,res) => {
 
   // const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
 
-  if(!profilePhotoLocalPath){
-    throw new ApiError(400,"profilePhoto file is required.");
-  }
+  // if(!profilePhotoLocalPath){
+  //   throw new ApiError(400,"profilePhoto file is required.");
+  // }
 
-  const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
+  // const profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
 
-  if(!profilePhoto){
-    throw new ApiError(400,"profilePhoto file is required to upload.");
-  }
+  // if(!profilePhoto){
+  //   throw new ApiError(400,"profilePhoto file is required to upload.");
+  // }
 
   const teacher = await Teacher.create({
-    fullName,
-    profilePhoto : profilePhoto.url,
+    // fullName,
+    // profilePhoto : profilePhoto.url,
+    role,
     email,
     password,
     username : username.toLowerCase(),
