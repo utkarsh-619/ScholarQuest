@@ -4,10 +4,10 @@ import axios from "axios";
 
 const PersonaInfo = () => {
   const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    regNumber: "",
+    fname: "",
+    lname: "",
+    phonenumber: "",
+    registrationNumber: "",
     course: "Pacific Standard Time",
   });
 
@@ -25,7 +25,7 @@ const PersonaInfo = () => {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/details",
         user,
-        { credentials: true } // Enable cookies in request
+        { withCredentials: true } // Enable cookies in request
       );
       alert("Profile updated successfully!");
     } catch (error) {
@@ -69,32 +69,32 @@ const PersonaInfo = () => {
             <div className="flex gap-4">
               <div className="w-full">
                 <label
-                  htmlFor="firstName"
+                  htmlFor="fname"
                   className="block text-sm text-gray-200 mb-1"
                 >
                   First name
                 </label>
                 <input
                   type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={user.firstName}
+                  id="fname"
+                  name="fname"
+                  value={user.fname}
                   onChange={handleChange}
                   className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div className="w-full">
                 <label
-                  htmlFor="lastName"
+                  htmlFor="lname"
                   className="block text-sm text-gray-200 mb-1"
                 >
                   Last name
                 </label>
                 <input
                   type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={user.lastName}
+                  id="lname"
+                  name="lname"
+                  value={user.lname}
                   onChange={handleChange}
                   className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -103,37 +103,20 @@ const PersonaInfo = () => {
 
             <div>
               <label
-                htmlFor="regNumber"
+                htmlFor="registrationNumber"
                 className="block text-sm text-gray-200 mb-1"
               >
                 Registration Number
               </label>
               <input
                 type="text"
-                id="regNumber"
-                name="regNumber"
-                value={user.regNumber}
+                id="registrationNumber"
+                name="registrationNumber"
+                value={user.registrationNumber}
                 onChange={handleChange}
                 className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-
-            {/* <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm text-gray-200 mb-1"
-              >
-                Phone Number
-              </label>
-              <input
-                type="text"
-                id="phone"
-                name="phone"
-                value={user.phone}
-                onChange={handleChange}
-                className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div> */}
 
             <div>
               <label
@@ -144,9 +127,9 @@ const PersonaInfo = () => {
               </label>
               <input
                 type="tel"
-                id="phone"
-                name="phone"
-                value={user.phone}
+                id="phonenumber"
+                name="phonenumber"
+                value={user.phonenumber}
                 onChange={handleChange}
                 className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />

@@ -27,23 +27,23 @@ const Signin = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Prepare data object
     const data = {
       username: formData.username,
       password: formData.password,
       userType,
     };
-
+  
     // Add email if signing up
     if (!isLogIn) {
       data.email = formData.email;
     }
-
+  
     try {
       const endpoint = isLogIn ? "/login" : "/register";
-      
-      // Send request
+  
+      // Send request with withCredentials set to true
       const response = await axios.post(
         `http://localhost:8000/api/v1/users${endpoint}`,
         data,
@@ -51,11 +51,12 @@ const Signin = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true, // Enable cookies
         }
       );
-
+  
       console.log("Response:", response.data);
-
+  
       if (response.status >= 200 && response.status < 300) {
         // Redirect upon successful sign-in or sign-up
         navigate("/dashboard");
@@ -64,6 +65,7 @@ const Signin = () => {
       console.error("Error during authentication:", error);
     }
   };
+  
 
   return (
     <>
