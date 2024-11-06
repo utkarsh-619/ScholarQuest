@@ -41,7 +41,7 @@ const Signin = () => {
     }
   
     try {
-      const baseEndPoint = role === "teacher" ? "/teacher" : "/users;"
+      const baseEndPoint = role === "teacher" ? "/teacher" : "/users";
       const endpoint = isLogIn ? "/login" : "/register";
   
       // Send request with withCredentials set to true
