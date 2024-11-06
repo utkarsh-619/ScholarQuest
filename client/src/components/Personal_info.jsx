@@ -7,7 +7,7 @@ const PersonaInfo = () => {
     fname: "",
     lname: "",
     phonenumber: "",
-    registrationNumber: "",
+    address: "",
     course: "Pacific Standard Time",
   });
 
@@ -106,13 +106,13 @@ const PersonaInfo = () => {
                 htmlFor="registrationNumber"
                 className="block text-sm text-gray-200 mb-1"
               >
-                Registration Number
+                Address
               </label>
               <input
                 type="text"
-                id="registrationNumber"
-                name="registrationNumber"
-                value={user.registrationNumber}
+                id="address"
+                name="address"
+                value={user.address}
                 onChange={handleChange}
                 className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
