@@ -29,11 +29,24 @@ const teacherSchema = new Schema({
     trim : true,
   },
   
-  fullName : {
+  fname : {
     type : String,
-    required : true,
+    // required : true,
     trim : true,
     index : true,
+  },
+
+  lname : {
+    type : String,
+    // required : true,
+    trim : true,
+    index : true,
+  },
+  
+  role : {
+    type : String,
+    trim : true,
+    required : true,
   },
 
   profilePhoto : {

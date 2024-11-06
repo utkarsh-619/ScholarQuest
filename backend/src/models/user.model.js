@@ -80,6 +80,13 @@ const userSchema = new Schema({
       trim : true,
       index : true,
     },
+
+    role : {
+      type : String,
+      // required : true,
+      trim : true,
+      index : true,
+    },
   
   profilePhoto : {
     type : String, // Cloudnary url
