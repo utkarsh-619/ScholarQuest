@@ -13,7 +13,7 @@ const Signin = () => {
     confirmPassword: "",
   });
   // const [profilePhoto, setProfilePhoto] = useState(null);
-  const [userType, setUserType] = useState(""); // State for user type
+  const [role, setUserType] = useState(""); // State for user type
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -32,7 +32,7 @@ const Signin = () => {
     const data = {
       username: formData.username,
       password: formData.password,
-      userType,
+      role,
     };
   
     // Add email if signing up
@@ -41,11 +41,12 @@ const Signin = () => {
     }
   
     try {
+      const baseEndPoint = role === "teacher" ? "/teacher" : "/users;"
       const endpoint = isLogIn ? "/login" : "/register";
   
       // Send request with withCredentials set to true
       const response = await axios.post(
-        `http://localhost:8000/api/v1/users${endpoint}`,
+        `http://localhost:8000/api/v1${baseEndPoint}${endpoint}`,
         data,
         {
           headers: {
@@ -54,12 +55,18 @@ const Signin = () => {
           withCredentials: true, // Enable cookies
         }
       );
-  
+
       console.log("Response:", response.data);
   
       if (response.status >= 200 && response.status < 300) {
         // Redirect upon successful sign-in or sign-up
-        navigate("/dashboard");
+        if(isLogIn){
+          navigate("/dashboard");
+        }
+        else{
+          navigate("/profile");
+        }
+        
       }
     } catch (error) {
       console.error("Error during authentication:", error);
@@ -228,9 +235,9 @@ const Signin = () => {
                 <label className="inline-flex items-center mx-4">
                   <input
                     type="radio"
-                    name="userType"
+                    name="role"
                     value="teacher"
-                    checked={userType === "teacher"}
+                    checked={role === "teacher"}
                     onChange={handleUserTypeChange}
                     className="form-radio h-4 w-4 text-blue-600"
                   />
@@ -242,9 +249,9 @@ const Signin = () => {
                 <label className="inline-flex items-center mx-4">
                   <input
                     type="radio"
-                    name="userType"
+                    name="role"
                     value="student"
-                    checked={userType === "student"}
+                    checked={role === "student"}
                     onChange={handleUserTypeChange}
                     className="form-radio h-4 w-4 text-blue-600"
                   />
