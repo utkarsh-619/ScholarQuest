@@ -7,9 +7,9 @@ import jwt from "jsonwebtoken"
 
 
 
-const generateAccessAndRefreshTokens = async(teacherId)=>{
+const generateAccessAndRefreshTokens = async(TeacherId)=>{
   try {
-    const teacher = await Teacher.findById(teacherId)
+    const teacher = await Teacher.findById(TeacherId)
     const accessToken = teacher.generateAccessToken()
     const refreshToken = teacher.generateRefreshToken()
 
@@ -33,11 +33,11 @@ const registerTeacher = asyncHandler (async(req,res) => {
   // push data in the data base;
   // create 
 
-  const {username,role,email,password} = req.body
-  // console.log("email ",email);
+  const {username,email,password} = req.body
+  console.log("email ",email);
 
   if(
-    [email, role,username, password].some((field) => field?.trim() ==="")
+    [email, username, password].some((field) => field?.trim() ==="")
   ){
     throw new ApiError(400,"All fields are required.")
   }
@@ -65,26 +65,24 @@ const registerTeacher = asyncHandler (async(req,res) => {
   const teacher = await Teacher.create({
     // fullName,
     // profilePhoto : profilePhoto.url,
-    role,
     email,
     password,
     username : username.toLowerCase(),
-
   })
 
-  const createdteacher = await Teacher.findById(teacher._id).select(
+  const createdTeacher = await Teacher.findById(teacher._id).select(
     "-password -refreshToken"
   )
   
-  if(!createdteacher){
+  if(!createdTeacher){
     throw new ApiError(500,"Something went wrong while registering the teacher")
   }
 
   return res.status(201).json(
-    new ApiResponse(200, createdteacher,"Teacher registered Successfully")
+    new ApiResponse(200, createdTeacher,"Teacher registered Successfully")
   )
-
 })
+
 
 const loginTeacher = asyncHandler (async(req,res) => {
   //if local refresh token is matched with db then login 
@@ -98,7 +96,7 @@ const loginTeacher = asyncHandler (async(req,res) => {
   const {email, username, password} = req.body
 
   if(!username && !email){
-    throw new ApiError(400,"Teachername or email is")
+    throw new ApiError(400,"username or email is")
   }
 
   const teacher = await Teacher.findOne({
@@ -201,7 +199,7 @@ const refreshAccessToken = asyncHandler(async (req,res)=>{
     return res
     .status(200)
     .cookie("accessToken",accessToken, options)
-    .cookie("accessToken",newRefreshToken, options)
+    .cookie("refreshToken",newRefreshToken, options)
     .json(
       new ApiResponse(
         200,
