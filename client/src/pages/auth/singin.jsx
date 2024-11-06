@@ -230,7 +230,7 @@ const Signin = () => {
             )}
 
             {/* Checkboxes for user type */}
-            {!isLogIn && (
+            {(
               <div className="mt-4 flex justify-evenly">
                 <label className="inline-flex items-center mx-4">
                   <input
