@@ -33,11 +33,10 @@ const registerTeacher = asyncHandler (async(req,res) => {
   // push data in the data base;
   // create 
 
-  const {username,email,password} = req.body
-  console.log("email ",email);
+  const {username,email,role,password} = req.body
 
   if(
-    [email, username, password].some((field) => field?.trim() ==="")
+    [email, username, role,password].some((field) => field?.trim() ==="")
   ){
     throw new ApiError(400,"All fields are required.")
   }
@@ -67,6 +66,7 @@ const registerTeacher = asyncHandler (async(req,res) => {
     // profilePhoto : profilePhoto.url,
     email,
     password,
+    role,
     username : username.toLowerCase(),
   })
 
