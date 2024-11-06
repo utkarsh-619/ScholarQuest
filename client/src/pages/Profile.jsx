@@ -4,6 +4,10 @@ import PersonalInfo from "../components/Personal_info";
 import ChangePassword from "../components/ChangePassword";
 
 const Profile = () => {
+
+    
+
+
   return (
     <div className="flex">
       <SideMenu />
