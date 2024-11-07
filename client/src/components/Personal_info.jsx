@@ -1,197 +1,125 @@
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
+import React from 'react';
+import { Bar } from 'react-chartjs-2';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import SideMenu from '../components/SideMenu';
+import { BsSearch } from 'react-icons/bs';
 
-const PersonaInfo = () => {
-  const [user, setUser] = useState({
-    fname: "",
-    lname: "",
-    phonenumber: "",
-    address: "",
-    course: "", // this will store the selected course ID
-  });
+// Chart.js registration
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-  const [profilePhoto, setAvatar] = useState();
-  const [allCourses, setAllCourses] = useState([]); // Initialize as an empty array
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-  const fileInputRef = useRef();
+// Summary card component for reusability
+const SummaryCard = ({ title, value, color }) => (
+  <div className={`p-4 rounded-lg shadow-md ${color}`}>
+    <h3 className="text-lg font-semibold">{title}</h3>
+    <p className="text-3xl font-bold mt-2">{value}</p>
+  </div>
+);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
+const Dashboard = () => {
+  const [date, setDate] = React.useState(new Date());
+
+  // Bar chart data and options with only 4 data points
+  const barChartData = {
+    labels: ['2018', '2019', '2020', '2021'], // Reduced to 4 labels
+    datasets: [
+      {
+        label: 'Yearly Statistics',
+        data: [500, 300, 600, 450], // Reduced to 4 data points
+        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 2,
+        borderRadius: 5,
+      },
+    ],
   };
 
-  // Handle avatar change
-  const handleAvatarChange = (e) => {
-    setAvatar(e.target.files[0]);
-  };
-
-  // Submit the form
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("profilePhoto", profilePhoto);
-    formData.append("fname", user.fname);
-    formData.append("lname", user.lname);
-    formData.append("phonenumber", user.phonenumber);
-    formData.append("address", user.address);
-    formData.append("courseId", user.course); // Sending the course ID (not name)
-
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users/details", // Your API endpoint for submitting user details
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
+  const barChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          font: {
+            size: 14,
           },
-        }
-      );
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
-    }
+        },
+      },
+      title: {
+        display: true,
+        text: 'Yearly Performance',
+        font: {
+          size: 16,
+        },
+      },
+    },
   };
-
-  // Fetch courses on component mount
-  const fetchCourses = async () => {
-    try {
-      const courseResponse = await axios.get('http://localhost:8000/api/v1/users/courses', {
-        withCredentials: true,
-      });
-      console.log(courseResponse.data);
-      
-      setAllCourses(courseResponse.data.data); // Use the data from the response
-    } catch (err) {
-      console.error('Failed to fetch courses:', err);
-    }
-  };
-
-  useEffect(() => {
-    fetchCourses(); // Fetch the courses when the component mounts
-  }, []);
 
   return (
-    <div className="flex mb-6">
-      <div className="w-2/5 lg:pl-20">
-        <h2 className="text-lg font-semibold text-gray-200">Personal Information</h2>
-        <p className="text-sm text-gray-400">Use a permanent address where you can receive mail.</p>
-      </div>
+    <div className="flex">
+      {/* Side Menu */}
+      <SideMenu />
 
-      <div className="w-2/5">
-        <div className="flex items-center mb-6">
-          <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden">
-            <img
-              src={profilePhoto ? URL.createObjectURL(profilePhoto) : "https://via.placeholder.com/64"}
-              alt="Avatar"
-              className="object-cover w-full h-full"
-            />
-          </div>
-          <div>
-            <h3 className="ml-6 mb-2 text-white font-semibold">Kushagra Kumar</h3>
+      {/* Main Dashboard Content */}
+      <div className="flex-grow p-6 bg-gray-50 min-h-screen">
+        {/* Header Section */}
+        <header className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+          <div className="relative">
             <input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              ref={fileInputRef}
-              style={{ display: "none" }}
+              type="text"
+              placeholder="Search"
+              className="p-3 border rounded-lg w-64 pl-10 shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-            <button
-              onClick={() => fileInputRef.current.click()}
-              className="ml-6 px-4 py-1 bg-gray-700 text-sm text-gray-300 rounded hover:bg-gray-600">
-              Change profilePhoto
-            </button>
+            <BsSearch className="absolute left-3 top-3 text-gray-500" size={20} />
+          </div>
+        </header>
+
+        {/* Summary Cards Section */}
+        <div className="grid grid-cols-4 gap-6 mb-6">
+          <SummaryCard title="Total Students" value="1220" color="bg-purple-100 hover:bg-purple-200" />
+          <SummaryCard title="Total Teachers" value="120" color="bg-pink-100 hover:bg-pink-200" />
+          <SummaryCard title="Total Courses" value="15" color="bg-blue-100 hover:bg-blue-200" />
+          <SummaryCard title="Faculty Room" value="100" color="bg-yellow-100 hover:bg-yellow-200" />
+        </div>
+
+        {/* Statistics and Course Activities */}
+        <div className="grid grid-cols-3 gap-6 mb-6">
+          {/* Statistics Chart */}
+          <div className="col-span-2 p-6 bg-white rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">Statistics</h2>
+            <Bar data={barChartData} options={barChartOptions} />
+          </div>
+
+          {/* Calendar Component */}
+          <div className="p-6 bg-white rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">Calendar</h2>
+            <Calendar
+              value={date}
+              onChange={setDate}
+              className="rounded-lg border-none shadow-inner"
+            />
           </div>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <div className="w-full">
-                <label htmlFor="fname" className="block text-sm text-gray-200 mb-1">First name</label>
-                <input
-                  type="text"
-                  id="fname"
-                  name="fname"
-                  value={user.fname}
-                  onChange={handleChange}
-                  className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="w-full">
-                <label htmlFor="lname" className="block text-sm text-gray-200 mb-1">Last name</label>
-                <input
-                  type="text"
-                  id="lname"
-                  name="lname"
-                  value={user.lname}
-                  onChange={handleChange}
-                  className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="address" className="block text-sm text-gray-200 mb-1">Address</label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={user.address}
-                onChange={handleChange}
-                className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="phonenumber" className="block text-sm text-gray-200 mb-1">Phone Number</label>
-              <input
-                type="tel"
-                id="phonenumber"
-                name="phonenumber"
-                value={user.phonenumber}
-                onChange={handleChange}
-                className="bg-gray-700 text-white text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="course" className="block text-sm text-gray-200 mb-1">Course</label>
-              <select
-                id="course"
-                name="course"
-                value={user.course}
-                onChange={handleChange}
-                className="bg-gray-700 text-gray-400 text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {allCourses.length > 0 ? (
-                  allCourses.map((course) => (
-                    <option key={course._id} value={course._id}> {/* Use _id here */}
-                      {course.name}
-                    </option>
-                  ))
-                ) : (
-                  <option>Loading courses...</option>
-                )}
-              </select>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg">
-              Save
-            </button>
-          </div>
-        </form>
+        {/* Database Table */}
+        <div className="p-6 bg-white rounded-lg shadow-lg mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Database</h2>
+          {/* Add table content or components here */}
+        </div>
       </div>
     </div>
   );
 };
 
-export default PersonaInfo;
+export default Dashboard;
