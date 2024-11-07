@@ -1,6 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-
 
 const PersonaInfo = () => {
   const [user, setUser] = useState({
@@ -8,10 +7,11 @@ const PersonaInfo = () => {
     lname: "",
     phonenumber: "",
     address: "",
-    course: "Pacific Standard Time",
+    course: "",
   });
 
   const [profilePhoto, setAvatar] = useState();
+  const [allCourses, setAllCourses] = useState([]); // Initialize as an empty array
 
   const fileInputRef = useRef();
 
@@ -41,11 +41,11 @@ const PersonaInfo = () => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/details",
-        formData, // send formData instead of user
+        formData,
         {
-          withCredentials: true, // Enable cookies in request
+          withCredentials: true,
           headers: {
-            "Content-Type": "multipart/form-data", // important for file uploads
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -56,6 +56,20 @@ const PersonaInfo = () => {
     }
   };
 
+  const fetchCourses = async () => {
+    try {
+      const courseResponse = await axios.get('http://localhost:8000/api/v1/users/courses', {
+        withCredentials: true
+      });
+      setAllCourses(courseResponse.data.data); // Use the data from the response
+    } catch (err) {
+      console.error('Failed to fetch courses:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses(); // Fetch the courses when the component mounts
+  }, []);
 
   return (
     <div className="flex mb-6">
@@ -167,7 +181,6 @@ const PersonaInfo = () => {
               />
             </div>
 
-
             <div>
               <label
                 htmlFor="course"
@@ -182,10 +195,16 @@ const PersonaInfo = () => {
                 onChange={handleChange}
                 className="bg-gray-700 text-gray-400 text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <option>Data structure and algorithm</option>
-                <option>Operating system</option>
-                <option>Database managament system</option>
-                <option>Computer network</option>
+                {/* Add a conditional check to render courses */}
+                {allCourses.length > 0 ? (
+                  allCourses.map((course) => (
+                    <option key={course._id} value={course.name}>
+                      {course.name}
+                    </option>
+                  ))
+                ) : (
+                  <option>Loading courses...</option>
+                )}
               </select>
             </div>
           </div>
