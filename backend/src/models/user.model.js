@@ -13,13 +13,60 @@ const userSchema = new Schema({
     index : true,
   },
 
-  course : {
-    type : String,
-    // required : true,
-    lowercase : true,
-    trim : true,
-    index : true,
-  },
+  courseEnrollments: [
+    {
+      courseName: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      subjects: [
+        {
+          subname: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+          attendedClasses:{
+            type: Number,
+            required: true,
+            default: 0
+          } 
+          ,
+          totalClasses: {
+            type: Number,
+            required: true,
+            default: 0
+          },
+          // marks: [
+          //   {
+          //     examName: { type: String, required: true },
+          //     score: { type: Number, required: true },
+          //     maxScore: { type: Number, required: true }
+          //   }
+          // ],
+          assignments: [
+            {
+              assignmentName: {
+                type: String,
+                required: true,
+                trim: true,
+              },
+              // dueDate: {
+              //   type: Date,
+              //   required: true,
+              // },
+              status: {
+                type: String,
+                enum: ['pending', 'completed'],
+                default: 'pending',
+              },
+            }
+          ]
+        }
+      ]
+    }
+  ],
 
   registrationNumber : {
     type : String,
