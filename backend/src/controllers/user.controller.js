@@ -80,7 +80,7 @@ const enrollUserInCourse = async (userId, courseId) => {
     );
 
     if (!alreadyEnrolled) {
-      user.courseEnrollments.push(courseEnrollment);
+      user.courseEnrollments = courseEnrollment ;
       await user.save();
     }
   } catch (error) {
