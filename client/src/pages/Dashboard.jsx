@@ -169,7 +169,7 @@ const Dashboard = () => {
             <Calendar
               value={date}
               onChange={setDate}
-              className="rounded-lg border-none shadow-inner"
+              className="rounded-lg border-none shadow-inner" 
             />
           </div>
         </div>
