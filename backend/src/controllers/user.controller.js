@@ -220,7 +220,7 @@ const detailsUser = asyncHandler (async(req,res) => {
   // take data from user;
   // validate the data taken from the user.
   // update the data in the data base for user;
-  const {fname,lname,registrationNumber,phonenumber,course,} = req.body
+  const {fname,lname,registrationNumber,phonenumber,course} = req.body
   console.log(req.body);
   
   // console.log("email ",email);

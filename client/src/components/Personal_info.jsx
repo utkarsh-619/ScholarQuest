@@ -7,7 +7,7 @@ const PersonaInfo = () => {
     lname: "",
     phonenumber: "",
     address: "",
-    course: "",
+    course: "", // this will store the selected course ID
   });
 
   const [profilePhoto, setAvatar] = useState();
@@ -15,6 +15,7 @@ const PersonaInfo = () => {
 
   const fileInputRef = useRef();
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
@@ -23,10 +24,12 @@ const PersonaInfo = () => {
     }));
   };
 
+  // Handle avatar change
   const handleAvatarChange = (e) => {
     setAvatar(e.target.files[0]);
-  }
+  };
 
+  // Submit the form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -35,12 +38,12 @@ const PersonaInfo = () => {
     formData.append("fname", user.fname);
     formData.append("lname", user.lname);
     formData.append("phonenumber", user.phonenumber);
-    formData.append("registrationNumber", user.registrationNumber);
-    formData.append("course", user.course);
+    formData.append("address", user.address);
+    formData.append("courseId", user.course); // Sending the course ID (not name)
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/details",
+        "http://localhost:8000/api/v1/users/details", // Your API endpoint for submitting user details
         formData,
         {
           withCredentials: true,
@@ -56,11 +59,14 @@ const PersonaInfo = () => {
     }
   };
 
+  // Fetch courses on component mount
   const fetchCourses = async () => {
     try {
       const courseResponse = await axios.get('http://localhost:8000/api/v1/users/courses', {
-        withCredentials: true
+        withCredentials: true,
       });
+      console.log(courseResponse.data);
+      
       setAllCourses(courseResponse.data.data); // Use the data from the response
     } catch (err) {
       console.error('Failed to fetch courses:', err);
@@ -74,15 +80,10 @@ const PersonaInfo = () => {
   return (
     <div className="flex mb-6">
       <div className="w-2/5 lg:pl-20">
-        <h2 className="text-lg font-semibold text-gray-200">
-          Personal Information
-        </h2>
-        <p className="text-sm text-gray-400">
-          Use a permanent address where you can receive mail.
-        </p>
+        <h2 className="text-lg font-semibold text-gray-200">Personal Information</h2>
+        <p className="text-sm text-gray-400">Use a permanent address where you can receive mail.</p>
       </div>
 
-      {/* Avatar */}
       <div className="w-2/5">
         <div className="flex items-center mb-6">
           <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden">
@@ -109,17 +110,11 @@ const PersonaInfo = () => {
           </div>
         </div>
 
-        {/* Form Fields */}
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="flex gap-4">
               <div className="w-full">
-                <label
-                  htmlFor="fname"
-                  className="block text-sm text-gray-200 mb-1"
-                >
-                  First name
-                </label>
+                <label htmlFor="fname" className="block text-sm text-gray-200 mb-1">First name</label>
                 <input
                   type="text"
                   id="fname"
@@ -130,12 +125,7 @@ const PersonaInfo = () => {
                 />
               </div>
               <div className="w-full">
-                <label
-                  htmlFor="lname"
-                  className="block text-sm text-gray-200 mb-1"
-                >
-                  Last name
-                </label>
+                <label htmlFor="lname" className="block text-sm text-gray-200 mb-1">Last name</label>
                 <input
                   type="text"
                   id="lname"
@@ -148,12 +138,7 @@ const PersonaInfo = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="registrationNumber"
-                className="block text-sm text-gray-200 mb-1"
-              >
-                Address
-              </label>
+              <label htmlFor="address" className="block text-sm text-gray-200 mb-1">Address</label>
               <input
                 type="text"
                 id="address"
@@ -165,12 +150,7 @@ const PersonaInfo = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="phone_number"
-                className="block text-sm text-gray-200 mb-1"
-              >
-                Phone Number
-              </label>
+              <label htmlFor="phonenumber" className="block text-sm text-gray-200 mb-1">Phone Number</label>
               <input
                 type="tel"
                 id="phonenumber"
@@ -182,12 +162,7 @@ const PersonaInfo = () => {
             </div>
 
             <div>
-              <label
-                htmlFor="course"
-                className="block text-sm text-gray-200 mb-1"
-              >
-                Course
-              </label>
+              <label htmlFor="course" className="block text-sm text-gray-200 mb-1">Course</label>
               <select
                 id="course"
                 name="course"
@@ -195,10 +170,9 @@ const PersonaInfo = () => {
                 onChange={handleChange}
                 className="bg-gray-700 text-gray-400 text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {/* Add a conditional check to render courses */}
                 {allCourses.length > 0 ? (
                   allCourses.map((course) => (
-                    <option key={course._id} value={course.name}>
+                    <option key={course._id} value={course._id}> {/* Use _id here */}
                       {course.name}
                     </option>
                   ))
@@ -209,7 +183,6 @@ const PersonaInfo = () => {
             </div>
           </div>
 
-          {/* Save Button */}
           <div className="mt-6">
             <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg">
               Save
