@@ -4,6 +4,7 @@ import { Teacher } from "../models/teacher.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
+import { Course } from "../models/course.model.js";
 
 
 
@@ -216,4 +217,45 @@ const refreshAccessToken = asyncHandler(async (req,res)=>{
 })
 
 
-export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken}
+const detailsTeacher = asyncHandler (async(req,res) => {
+  // take data from teacher;
+  // validate the data taken from the user.
+  // update the data in the data base for user;
+  const {fname,lname,phonenumber,courses} = req.body
+  
+  // console.log("email ",email);
+  
+  const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
+  
+  var profilePhoto = null;
+  if(profilePhotoLocalPath){
+    profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
+  }
+  const updateData = {};
+
+  // Only add properties to updateData if they are truthy
+  if (fname) updateData.fname = fname;
+  if (lname) updateData.lname = lname;
+  if (courses) updateData.courses = courses;
+  if (phonenumber) updateData.phonenumber = phonenumber;
+  if (profilePhoto) updateData.profilePhoto = profilePhoto.url;
+
+  // Perform the update
+  await Teacher.updateOne({ _id: req.user._id }, {
+    fname : updateData.fname,
+    lname : updateData.lname,
+    phonenumber : updateData.phonenumber,
+    profilePhoto : updateData.profilePhoto
+  });
+  
+  return res.status(201).json(
+    new ApiResponse(200,"Teacher data updated Successfully")
+  )
+})
+
+const getCourses = asyncHandler(async(req,res)=>{
+  const courses = await Course.find()
+  return res.status(200).json(new ApiResponse(200,courses,"Courses fetched successfully"))
+})
+
+export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken,detailsTeacher,getCourses}

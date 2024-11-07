@@ -31,4 +31,6 @@ router.route("/details").post(upload.fields([
   }
 ]),verifyJWT,detailsUser)
 
+router.route("/courses").get(verifyJWT,getCourses)
+
 export default router

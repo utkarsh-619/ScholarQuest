@@ -15,9 +15,8 @@ const teacherSchema = new Schema({
 
   courses : [
     {
-      type : String,
-      lowercase : true,
-      trim : true,
+      type : mongoose.Schema.Types.ObjectId,
+      ref : 'Course',
     }
   ],
 

@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
+import { Course } from "../models/course.model.js";
 
 
 
@@ -252,5 +253,9 @@ const detailsUser = asyncHandler (async(req,res) => {
   )
 })
 
+const getCourses = asyncHandler(async(req,res)=>{
+  const courses = await Course.find()
+  return res.status(200).json(new ApiResponse(200,courses,"Courses fetched successfully"))
+})
 
-export {registerUser,loginUser,logoutUser,refreshAccessToken,detailsUser}
+export {registerUser,loginUser,logoutUser,refreshAccessToken,detailsUser,getCourses}
