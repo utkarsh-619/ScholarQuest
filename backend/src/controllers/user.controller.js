@@ -59,34 +59,48 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const enrollUserInCourse = async (userId, courseId) => {
   try {
+    // Find the course by ID
     const course = await Course.findById(courseId);
     if (!course) {
       throw new ApiError(404, "Course not found");
     }
 
+    // Find the user by ID
     const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    // Create the course enrollment structure with subjects and chapters
     const courseEnrollment = {
       courseName: course.name,
       subjects: course.subjects.map((subject) => ({
-        subname: subject,
+        subname: subject.name,
         attendedClasses: 0,
         totalClasses: 0,
         assignments: [],
+        chapters: subject.chapters.map((chapter) => ({
+          name: chapter.name,
+          isCompleted: false,
+        })),
       })),
     };
 
+    // Check if the user is already enrolled in this course
     const alreadyEnrolled = user.courseEnrollments.some(
       (enrollment) => enrollment.courseName === course.name
     );
 
+    // If not already enrolled, add the course to user's enrollments
     if (!alreadyEnrolled) {
-      user.courseEnrollments = courseEnrollment ;
+      user.courseEnrollments.push(courseEnrollment);
       await user.save();
     }
   } catch (error) {
     throw new ApiError(500, "Error enrolling user in course");
   }
 };
+
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
@@ -252,6 +266,21 @@ const getUserData = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, user, "User data fetched successfully"));
 });
 
+//route to get an array of all users , profile photo, aura point and course name
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find().select('username profilePhoto auraPoints courseEnrollments.courseName');
+  
+  // Format the response
+  const formattedUsers = users.map(user => ({
+    username: user.username,
+    profilePhoto: user.profilePhoto,
+    auraPoints: user.auraPoints,
+    courseName: user.courseEnrollments[0].courseName
+  }));
+
+  return res.status(200).json(new ApiResponse(200, formattedUsers, "Users fetched successfully"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -259,7 +288,8 @@ export {
   refreshAccessToken,
   detailsUser,
   getCourses,
-  getUserData
+  getUserData,
+  getAllUsers
 };
 
 
