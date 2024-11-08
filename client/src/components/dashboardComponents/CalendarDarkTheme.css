@@ -1,0 +1,58 @@
+.react-calendar {
+    background-color: #1f2937; /* Dark background */
+    border: none;
+    border-radius: 8px;
+    color: #d1d5db; /* Light text color */
+  }
+  
+  .react-calendar__navigation {
+    background-color: #1f2937; /* Dark background for navigation */
+    border-bottom: 1px solid #374151;
+  }
+  
+  .react-calendar__navigation button {
+    color: #d1d5db; /* Light text color for buttons */
+    background-color: transparent; /* Transparent to blend with dark theme */
+  }
+  
+  .react-calendar__navigation button:enabled:hover,
+  .react-calendar__navigation button:enabled:focus {
+    color: #d1d5db; /* Keep the text color the same on hover */
+    background-color: transparent; /* No background color change */
+  }
+  
+  
+  .react-calendar__month-view__weekdays {
+    background-color: #1f2937; /* Dark background for weekday header */
+  }
+  
+  .react-calendar__month-view__weekdays__weekday {
+    color: #9ca3af; /* Light gray for weekday labels */
+  }
+  
+  .react-calendar__tile {
+    background-color: #2d3748; /* Darker background for tiles */
+    color: #d1d5db; /* Light text */
+    border-radius: 4px;
+  }
+  
+  .react-calendar__tile:enabled:hover,
+  .react-calendar__tile:enabled:focus {
+    background-color: #374151; /* Dark highlight on hover */
+  }
+  
+  .react-calendar__tile--active {
+    background-color: #4f46e5; /* Active tile with a dark purple color */
+    color: #ffffff; /* White text on active tile */
+  }
+  
+  .react-calendar__tile--active:enabled:hover,
+  .react-calendar__tile--active:enabled:focus {
+    background-color: #6366f1; /* Brighter shade for active tile on hover */
+  }
+  
+  .react-calendar__tile--now {
+    background-color: #6b7280; /* Dark gray for the current date */
+    color: #ffffff;
+  }
+  
