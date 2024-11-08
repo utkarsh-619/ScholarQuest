@@ -11,8 +11,22 @@ const courseSchema = new Schema({
   },
 
   subjects : [{
-    type : String,
-    lowercase : true,
+    name : {
+      type : String,
+      lowercase : true,
+    },
+    chapters : [
+      {
+        name : {
+          type : String,
+        },
+        isCompleted : {
+          type : Boolean,
+          default : false
+        }
+
+      }
+    ]
   }],
 
   studentsEnrolled: [{

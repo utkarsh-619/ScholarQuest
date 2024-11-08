@@ -38,6 +38,19 @@ const userSchema = new Schema({
             required: true,
             default: 0
           },
+          
+          chapters : [
+            {
+              name : {
+                type : String,
+              },
+              isCompleted : {
+                type : Boolean,
+                default : false
+              }
+            }
+          ],
+
           // marks: [
           //   {
           //     examName: { type: String, required: true },
@@ -83,29 +96,6 @@ const userSchema = new Schema({
     index : true,
   },
 
-  assignments: [
-    {
-      subjectName: {
-        type: String,
-        required: true,
-        trim: true, // Removes any extra spaces
-      },
-      assignmentName: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      dueDate: {
-        type: Date,
-        required: true,
-      },
-      status: {
-        type: String,
-        default: 'pending',
-      },
-    },
-  ],
-
   email : {
     type : String,
     required : true,
@@ -124,6 +114,12 @@ const userSchema = new Schema({
     lname : {
       type : String,
       // required : true,
+      trim : true,
+      index : true,
+    },
+
+    address : {
+      type : String,
       trim : true,
       index : true,
     },
