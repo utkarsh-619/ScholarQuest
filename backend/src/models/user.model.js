@@ -12,7 +12,10 @@ const userSchema = new Schema({
     trim : true,
     index : true,
   },
-
+  auraPoints : {
+    type : Number,
+    default : 0
+  },
   courseEnrollments: [
     {
       courseName: {
@@ -38,7 +41,7 @@ const userSchema = new Schema({
             required: true,
             default: 0
           },
-          
+
           chapters : [
             {
               name : {
