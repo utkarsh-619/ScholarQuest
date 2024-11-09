@@ -32,8 +32,6 @@ ChartJS.register(
 const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [subjects, setSubjects] = useState([]);
-  // const [attended, setAttended] = useState([]);
-  // const [totalClasses, setTotalClasses] = useState([]);
 
   // Fetch subjects and update the state
   const fetchUserData = async () => {
@@ -44,12 +42,12 @@ const Dashboard = () => {
       );
 
       const subjectsData = response.data.data.courseEnrollments[0]?.subjects;
-      
+
       // Ensure the subjects exist in the response
       if (subjectsData && subjectsData.length <= 4) {
-        setSubjects(subjectsData.slice(0, 4));  // Only keep the first 4 subjects
+        setSubjects(subjectsData.slice(0, 4)); // Only keep the first 4 subjects
       }
-      
+
     } catch (err) {
       console.error("Failed to fetch data:", err);
     }
@@ -65,26 +63,46 @@ const Dashboard = () => {
     "bg-green-500 hover:bg-green-600",
     "bg-red-500 hover:bg-red-600",
   ];
-
+  // let completedCount, remainingCount;
   // Prepare the subjectsData array dynamically
-  const subjectsData = subjects.map((subject, index) => ({
-    title: subject.subname,
-    color: subjectColors[index],
-    value1: subject.attendedClasses,  // Example value, you can modify as needed
-    value2: subject.totalClasses,  // Example value, you can modify as needed
-  }));
-  // console.log(subjects[0].totalClasses);
+  const subjectsData = subjects.map((subject, index) => {
+    const chapters = subject.chapters || []; // Array of chapters, each with an `isCompleted` property
   
-  const doughnutData = {
-    labels: ["Completed", "Remaining"],
-    datasets: [
-      {
-        data: [80,20],
-        backgroundColor: ["#4F46E5", "#D97706"],
-        hoverBackgroundColor: ["#6366F1", "#F59E0B"],
-      },
-    ],
-  };
+    // Count `true` and `false` values in `isCompleted`
+    let completedCount = 0;
+    let remainingCount = 0;
+  
+    chapters.forEach((chapter) => {
+      if (chapter.isCompleted) {
+        completedCount++;
+      } else {
+        remainingCount++;
+      }
+    });
+  
+    // Create the doughnut chart data
+    const doughnutData = {
+      labels: ["Completed", "Remaining"],
+      datasets: [
+        {
+          data: [completedCount, remainingCount],
+          backgroundColor: ["#D97706", "#4F46E5"], // Orange for completed, blue for remaining
+          hoverBackgroundColor: ["#F59E0B", "#6366F1"], // Hover colors
+        },
+      ],
+    };
+  
+    return {
+      title: subject.subname,
+      color: subjectColors[index],
+      value1: completedCount, // Display count of completed chapters
+      value2: remainingCount, // Display count of remaining chapters
+      doughnutData,
+    };
+  });
+  
+  
+
 
   const barChartData = {
     labels: subjects.map((subject) => subject.subname),
@@ -139,8 +157,6 @@ const Dashboard = () => {
     },
   };
 
-  
-
   return (
     <div className="flex bg-gray-800 min-h-screen">
       <SideMenu />
@@ -154,16 +170,16 @@ const Dashboard = () => {
               value1={subject.value1}
               value2={subject.value2}
               color={subject.color}
-              doughnutData={doughnutData}
+              doughnutData={subject.doughnutData} // Pass the doughnut data
             />
           ))}
         </div>
         <div className="grid grid-cols-3 gap-6 mb-6">
-          <div className="col-span-2  bg-gray-800 rounded-lg">
+          <div className="col-span-2 bg-gray-800 rounded-lg">
             <BarChartSection data={barChartData} options={barChartOptions} />
           </div>
 
-          <div className="p-2 bg-gray-800 rounded-lg ">
+          <div className="p-2 bg-gray-800 rounded-lg">
             <CalendarSection date={date} onChange={setDate} />
           </div>
         </div>

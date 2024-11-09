@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-
 function ChangePassword() {
-
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -20,22 +18,54 @@ function ChangePassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // Check if newPassword and confirmPassword match
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      alert("New password and confirm password do not match!");
+      return;
+    }
+  
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/users/changepassword", passwordData);
-      alert("Password updated successfully!");
+      // Send request to backend with credentials
+      const response = await axios.post(
+        "http://localhost:8000/api/v1/users/changepassword",
+        {
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword
+        },
+        {
+          withCredentials: true // Send cookies or credentials with the request
+        }
+      );
+  
+      // Check if the response status is successful
+      if (response.status === 200) {
+        alert("Password updated successfully!");
+      } else {
+        alert("Failed to update password: " + response.data.msg);
+      }
     } catch (error) {
+      // Log the error response for debugging
       console.error("Error updating password:", error);
-      alert("Failed to update password.");
+  
+      // Check if the error has a response (in case the backend returns an error)
+      if (error.response) {
+        // Log detailed error response from the backend
+        console.error("Response error:", error.response);
+        alert("Failed to update password: " + error.response.data.message);
+      } else {
+        // Log network or other issues
+        alert("Failed to update password due to a network error.");
+      }
     }
   };
+  
 
   return (
     <>
       <div className="flex mb-6">
         <div className="w-2/5 lg:pl-20">
-          <h2 className="text-lg font-semibold text-gray-200">
-            Change password
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-200">Change password</h2>
           <p className="text-sm text-gray-400">
             Update your password associated with your account.
           </p>
@@ -105,13 +135,11 @@ function ChangePassword() {
 
       <div className="flex mb-6">
         <div className="w-2/5 lg:pl-20 pr-16">
-          <h2 className="text-lg font-semibold text-gray-200">
-            Delete account
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-200">Delete account</h2>
           <p className="text-sm text-gray-400">
             No longer want to use our service? You can delete your account here.
-            This action is not reversible. All information related to this
-            account will be deleted permanently.
+            This action is not reversible. All information related to this account
+            will be deleted permanently.
           </p>
         </div>
 
