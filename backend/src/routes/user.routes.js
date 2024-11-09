@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, logoutUser, registerUser, refreshAccessToken, detailsUser, getCourses, getUserData, changePassword, deleteUser, getLeaderBoardData} from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser, refreshAccessToken, detailsUser, getCourses, getUserData, changePassword, deleteUser, getLeaderBoardData, submitAssignment} from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -30,6 +30,14 @@ router.route("/details").post(upload.fields([
     maxCount: 1,
   }
 ]),verifyJWT,detailsUser)
+
+
+router.route("/uploadassignment").post(upload.fields([
+  {
+    name: "assignmentFile",
+    maxCount: 1,
+  }
+]),verifyJWT,submitAssignment)
 
 router.route("/courses").get(verifyJWT,getCourses)
 

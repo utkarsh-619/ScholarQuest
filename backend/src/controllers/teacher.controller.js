@@ -258,4 +258,11 @@ const getCourses = asyncHandler(async(req,res)=>{
   return res.status(200).json(new ApiResponse(200,courses,"Courses fetched successfully"))
 })
 
-export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken,detailsTeacher,getCourses}
+
+const getTeacherData = asyncHandler(async(req,res)=>{
+  console.log(req.teacher);
+  
+  const teacher = await Teacher.findById(req.teacher._id)
+  return res.status(200).json(new ApiResponse(200,teacher,"Teacher data fetched successfully"))
+})
+export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken,detailsTeacher,getCourses,getTeacherData}
