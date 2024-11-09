@@ -56,6 +56,22 @@ const Signin = () => {
         }
       );
 
+      const fetchUserData = async () => {
+        try {
+          const courseResponse = await axios.get(
+            "http://localhost:8000/api/v1/users/data",
+            {
+              withCredentials: true,
+            }
+          );
+          // setSubjects(courseResponse.data.data.courseEnrollments[0].subjects);
+          // setCourse(courseResponse.data.data.courseEnrollments[0].courseName);
+          console.log(courseResponse);
+        } catch (err) {
+          console.error("Failed to fetch courses:", err);
+        }
+      };
+
       console.log("Response:", response.data);
   
       if (response.status >= 200 && response.status < 300) {
@@ -64,9 +80,15 @@ const Signin = () => {
           navigate("/dashboard");
         }
         else{
-          navigate("/profile");
+          navigate("/signin");
+          setIsLogIn(true);
+          setFormData({
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          })
         }
-        
       }
     } catch (error) {
       console.error("Error during authentication:", error);
