@@ -44,7 +44,7 @@ const LeaderBoard = () => {
           {topUser && (
             <div className="flex flex-col items-center p-6 bg-gray-800 rounded-lg shadow-md w-1/3 h-96 relative">
               {showConfetti && (
-                <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
                   <Confetti width={width} height={height} numberOfPieces={200} recycle={false} />
                 </div>
               )}
