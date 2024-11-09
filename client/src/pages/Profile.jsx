@@ -15,7 +15,7 @@ const Profile = () => {
       <div className="bg-gray-700 text-white flex justify-center items-center min-h-screen w-full ">
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg  w-full">
           {/* Navigation */}
-          <div className="border-b border-gray-700 pb-4 mb-6 ">
+          <div className="border-b border-gray-700 pb-4 mb-6 flex justify-between items-center">
             <nav className="flex space-x-16 text-gray-400 lg:ml-20">
               <a
                 href="#"
@@ -27,6 +27,12 @@ const Profile = () => {
                 Notifications
               </a>
             </nav>
+
+            <div className="bg-red-700 p-2 rounded-xl text-sm font-semibold mr-16 cursor-pointer hover:bg-red-800">
+                <button>
+                    Log Out
+                </button>
+            </div>
           </div>
 
           {/* Personal Information */}
