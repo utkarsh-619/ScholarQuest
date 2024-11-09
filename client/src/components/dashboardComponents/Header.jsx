@@ -8,7 +8,7 @@ const Header = () => (
       <input
         type="text"
         placeholder="Search"
-        className="p-3 rounded-lg w-64 pl-10 shadow-sm focus:outline-none bg-gray-800 text-gray-300 placeholder-gray-500"
+        className="p-3 rounded-lg w-64 pl-10 shadow-sm focus:outline-none bg-gray-700 text-gray-300 placeholder-gray-500"
       />
       <BsSearch className="absolute left-3 top-3 text-gray-500" size={20} />
     </div>

@@ -1,8 +1,34 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { NavLink, Link } from "react-router-dom";
 import { RiCopperCoinFill } from "react-icons/ri";
+import axios from "axios";
 
 const SideMenu = () => {
+  const [name, setName] = useState();
+  const [avatar, setAvatar] = useState();
+  const [auraPoints, setAuraPoints] = useState();
+
+  const fetchUserData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/users/data",
+        { withCredentials: true }
+      );
+
+      console.log(response.data.data);
+      setName(response.data.data.username);
+      setAvatar(response.data.data.profilePhoto);
+      setAuraPoints(response.data.data.auraPoints)
+      
+    } catch (err) {
+      console.error("Failed to fetch leaderboard data:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
   return (
     <div className="mr-64">
       <aside className="fixed flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-gray-900 dark:border-gray-700">
@@ -15,7 +41,7 @@ const SideMenu = () => {
 
           <div className="flex items-center">
             <RiCopperCoinFill color="yellow" size="2em" />
-            <h3 className="text-white mr-2">10</h3>
+            <h3 className="text-white mr-2">{auraPoints}</h3>
           </div>
         </div>
 
@@ -169,11 +195,11 @@ const SideMenu = () => {
           <Link to="/profile" className="flex items-center px-4 -mx-2">
             <img
               className="object-cover mx-2 rounded-full h-9 w-9"
-              src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+              src={avatar}
               alt="avatar"
             />
             <span className="mx-2 font-medium text-gray-800 dark:text-gray-200">
-              John Doe
+              {name}
             </span>
           </Link>
         </div>
