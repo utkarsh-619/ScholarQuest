@@ -7,6 +7,7 @@ import Redeem from './pages/Redeem';
 // import Settings from './pages/Settings';
 import Signin from './pages/auth/singin';
 import Profile from './pages/Profile';
+import TeacherDashboard from './components/teacherDashboard';
 // import SideMenu from './components/SideMenu';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signin />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/teacherDashboard" element={<TeacherDashboard />}/>
         </Routes>
     </Router>
   );

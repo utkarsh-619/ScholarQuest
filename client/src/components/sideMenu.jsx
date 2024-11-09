@@ -7,6 +7,7 @@ const SideMenu = () => {
   const [name, setName] = useState();
   const [avatar, setAvatar] = useState();
   const [auraPoints, setAuraPoints] = useState();
+  const [role, setRole] = useState();
 
   const fetchUserData = async () => {
     try {
@@ -18,7 +19,10 @@ const SideMenu = () => {
     //   console.log(response.data.data);
       setName(response.data.data.username);
       setAvatar(response.data.data.profilePhoto);
-      setAuraPoints(response.data.data.auraPoints)
+      setAuraPoints(response.data.data.auraPoints);
+      setRole(response.data.data.role);
+      console.log(response.data.data);
+      
       
     } catch (err) {
       console.error("Failed to fetch leaderboard data:", err);
@@ -199,7 +203,7 @@ const SideMenu = () => {
               alt="avatar"
             />
             <span className="mx-2 font-medium text-gray-800 dark:text-gray-200">
-              {name}
+              {name}{role}
             </span>
           </Link>
         </div>

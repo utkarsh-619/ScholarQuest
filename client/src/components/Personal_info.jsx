@@ -179,25 +179,34 @@ const PersonaInfo = () => {
             </div>
 
             <div>
-              <label htmlFor="course" className="block text-sm text-gray-200 mb-1">Course</label>
-              <select
-                id="course"
-                name="course"
-                value={user.course}
-                onChange={handleChange}
-                className="bg-gray-700 text-gray-400 text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {allCourses.length > 0 ? (
-                  allCourses.map((course) => (
-                    <option key={course._id} value={course._id}> {/* Use _id here */}
-                      {course.name}
-                    </option>
-                  ))
-                ) : (
-                  <option>Loading courses...</option>
-                )}
-              </select>
-            </div>
+      <label htmlFor="course" className="block text-sm text-gray-200 mb-1">
+        Course
+      </label>
+      {user.course ? (
+        <div className="text-gray-400 text-sm">
+          {/* Display the selected course name */}
+          <p>Selected Course: {allCourses.find(course => course._id === user.course)?.name || "N/A"}</p>
+        </div>
+      ) : (
+        <select
+          id="course"
+          name="course"
+          value={user.course}
+          onChange={handleChange}
+          className="bg-gray-700 text-gray-400 text-sm rounded w-full p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {allCourses.length > 0 ? (
+            allCourses.map((course) => (
+              <option key={course._id} value={course._id}>
+                {course.name}
+              </option>
+            ))
+          ) : (
+            <option>Loading courses...</option>
+          )}
+        </select>
+      )}
+    </div>
           </div>
 
           <div className="mt-6">
