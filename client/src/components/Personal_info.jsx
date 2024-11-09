@@ -9,6 +9,22 @@ const PersonaInfo = () => {
     address: "",
     course: "", // this will store the selected course ID
   });
+  const [name, setName] = useState();
+  const [pic, setpic] = useState();
+  const fetchUserData = async () => {
+    try {
+      const userResponse = await axios.get(
+        "http://localhost:8000/api/v1/users/data",
+        {
+          withCredentials: true,
+        }
+      );
+      setName(userResponse.data.data.username);
+      setpic(userResponse.data.data.profilePhoto);
+    } catch (err) {
+      console.error("Failed to fetch courses:", err);
+    }
+  };
 
   const [profilePhoto, setAvatar] = useState();
   const [allCourses, setAllCourses] = useState([]); // Initialize as an empty array
@@ -75,6 +91,7 @@ const PersonaInfo = () => {
 
   useEffect(() => {
     fetchCourses(); // Fetch the courses when the component mounts
+    fetchUserData(); // Fetch the user when the component mounts
   }, []);
 
   return (
@@ -88,13 +105,13 @@ const PersonaInfo = () => {
         <div className="flex items-center mb-6">
           <div className="w-20 h-20 rounded-full bg-gray-700 overflow-hidden">
             <img
-              src={profilePhoto ? URL.createObjectURL(profilePhoto) : "https://via.placeholder.com/64"}
+              src={pic}
               alt="Avatar"
               className="object-cover w-full h-full"
             />
           </div>
           <div>
-            <h3 className="ml-6 mb-2 text-white font-semibold">Kushagra Kumar</h3>
+            <h3 className="ml-6 mb-2 text-white font-semibold">{name}</h3>
             <input
               type="file"
               accept="image/*"

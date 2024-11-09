@@ -9,7 +9,7 @@ const DatabaseTable = () => {
   ];
 
   return (
-    <div className="p-6 bg-gray-800 rounded-lg shadow-lg mb-6">
+    <div className="p-6 bg-gray-700 rounded-lg shadow-lg mb-6">
       <h2 className="text-xl font-semibold mb-4 text-gray-300">Database</h2>
       <table className="min-w-full border-collapse text-left">
         <thead>
