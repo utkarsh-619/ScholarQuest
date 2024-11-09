@@ -93,7 +93,7 @@ const enrollUserInCourse = async (userId, courseId) => {
 
     // If not already enrolled, add the course to user's enrollments
     if (!alreadyEnrolled) {
-      user.courseEnrollments.push(courseEnrollment);
+      user.courseEnrollments = courseEnrollment;
       await user.save();
     }
   } catch (error) {
