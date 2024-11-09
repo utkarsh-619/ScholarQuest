@@ -22,9 +22,9 @@ const generateAccessAndRefreshTokens = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { username, email, password, courseId } = req.body;
+  const { username, email, password,role } = req.body;
 
-  if ([email, username, password].some((field) => field?.trim() === "")) {
+  if ([email, username, password,role].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required.");
   }
 
@@ -39,19 +39,14 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     email,
     password,
+    role,
     username: username.toLowerCase(),
   });
-
-  if (courseId) {
-    await enrollUserInCourse(user._id, courseId); // Enroll user in the course
-  }
-
   const createdUser = await User.findById(user._id).select("-password -refreshToken");
 
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
-
   return res.status(201).json(
     new ApiResponse(200, createdUser, "User registered successfully")
   );
