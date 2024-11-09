@@ -281,6 +281,76 @@ const getAllUsers = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, formattedUsers, "Users fetched successfully"));
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+  const currentPassword = req.body.currentPassword;
+  const newPassword = req.body.newPassword;
+
+  if (!currentPassword || !newPassword) {
+    throw new ApiError(400, "Both current and new passwords are required.");
+  }
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  // Verify the current password
+  const isPasswordValid = await user.isPasswordCorrect(currentPassword);
+  if (!isPasswordValid) {
+    throw new ApiError(401, "Current password is incorrect.");
+  }
+
+  // Check that the new password is different from the current password
+  if (currentPassword === newPassword) {
+    throw new ApiError(400, "New password must be different from the current password.");
+  }
+
+  // Update the password and reset tokens
+  user.password = newPassword;
+  user.refreshToken = undefined; // Clear the current refresh token
+  await user.save();
+
+  // Generate new tokens
+  const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(new ApiResponse(200, {}, "Password changed and tokens reset successfully."));
+});
+
+const deleteUser = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  // Find the user
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  // Delete the user from the database
+  await User.findByIdAndDelete(userId);
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  // Clear authentication cookies
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User account deleted successfully."));
+});
+
 export {
   registerUser,
   loginUser,
@@ -289,7 +359,9 @@ export {
   detailsUser,
   getCourses,
   getUserData,
-  getAllUsers
+  getAllUsers,
+  changePassword,
+  deleteUser
 };
 
 
