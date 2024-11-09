@@ -18,15 +18,14 @@ function ChangePassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Check if newPassword and confirmPassword match
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert("New password and confirm password do not match!");
       return;
     }
-  
+
     try {
-      // Send request to backend with credentials
       const response = await axios.post(
         "http://localhost:8000/api/v1/users/changepassword",
         {
@@ -34,32 +33,30 @@ function ChangePassword() {
           newPassword: passwordData.newPassword
         },
         {
-          withCredentials: true // Send cookies or credentials with the request
+          withCredentials: true,
         }
       );
-  
-      // Check if the response status is successful
-      if (response.status === 200) {
-        alert("Password updated successfully!");
-      } else {
-        alert("Failed to update password: " + response.data.msg);
-      }
+      alert("Password updated successfully!");
     } catch (error) {
-      // Log the error response for debugging
       console.error("Error updating password:", error);
-  
-      // Check if the error has a response (in case the backend returns an error)
-      if (error.response) {
-        // Log detailed error response from the backend
-        console.error("Response error:", error.response);
-        alert("Failed to update password: " + error.response.data.message);
-      } else {
-        // Log network or other issues
-        alert("Failed to update password due to a network error.");
-      }
+      alert("Failed to update password.");
     }
   };
-  
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(
+        "http://localhost:8000/api/v1/users/delete", // Use the correct API endpoint for account deletion
+        {
+          withCredentials: true, // Send cookies with the request
+        }
+      );
+      alert("Account deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("Failed to delete account.");
+    }
+  };
 
   return (
     <>
@@ -147,6 +144,7 @@ function ChangePassword() {
           <form className="space-y-4">
             <button
               type="submit"
+              onClick={handleDelete}
               className="w-1/5 rounded-lg py-2 mt-4 font-semibold text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
             >
               Delete
