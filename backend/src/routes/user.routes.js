@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, logoutUser, registerUser, refreshAccessToken, detailsUser, getCourses, getUserData, getAllUsers, changePassword} from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser, refreshAccessToken, detailsUser, getCourses, getUserData, getAllUsers, changePassword, deleteUser} from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -32,8 +32,13 @@ router.route("/details").post(upload.fields([
 ]),verifyJWT,detailsUser)
 
 router.route("/courses").get(verifyJWT,getCourses)
+
 router.route("/data").get(verifyJWT,getUserData)
+
 router.route("/lbddata").get(verifyJWT,getAllUsers)
+
 router.route("/changepassword").post(verifyJWT,changePassword)
+
+router.route("/delete").delete(verifyJWT,deleteUser)
 
 export default router
