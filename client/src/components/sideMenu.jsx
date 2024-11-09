@@ -15,7 +15,7 @@ const SideMenu = () => {
         { withCredentials: true }
       );
 
-      console.log(response.data.data);
+    //   console.log(response.data.data);
       setName(response.data.data.username);
       setAvatar(response.data.data.profilePhoto);
       setAuraPoints(response.data.data.auraPoints)
