@@ -68,15 +68,21 @@ const userSchema = new Schema({
                 required: true,
                 trim: true,
               },
-              // dueDate: {
-              //   type: Date,
-              //   required: true,
-              // },
+              assignmentQuestion : {
+                type : String,
+              },
+              assignmentFile : {
+                type : String,
+              },
+              dueDate: {
+                type: Date,
+                required: true,
+              },
               status: {
                 type: String,
                 enum: ['pending', 'completed'],
                 default: 'pending',
-              },
+              }
             }
           ]
         }

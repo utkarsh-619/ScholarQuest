@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginTeacher, logoutTeacher, registerTeacher, refreshAccessToken, detailsTeacher, getCourses} from "../controllers/teacher.controller.js";
+import { loginTeacher, logoutTeacher, registerTeacher, refreshAccessToken, detailsTeacher, getCourses, getTeacherData} from "../controllers/teacher.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -32,5 +32,7 @@ router.route("/details").post(upload.fields([
 ]),verifyJWT,detailsTeacher)
 
 router.route("/courses").get(verifyJWT,getCourses)
+
+router.route("/data").get(verifyJWT,getTeacherData)
 
 export default router
