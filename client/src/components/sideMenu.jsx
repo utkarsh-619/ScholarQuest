@@ -12,7 +12,7 @@ const SideMenu = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/users/data",
+        "http://localhost:8000/api/v1/teacher/data",
         { withCredentials: true }
       );
 
@@ -76,7 +76,7 @@ const SideMenu = () => {
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
             <NavLink
-              to="/dashboard"
+              to={role === "teacher" ? "/teacherDashboard" : "/dashboard"}
               className={({ isActive }) =>
                 `flex items-center px-4 py-2 mt-5 transition-colors transform rounded-md ${
                   isActive
@@ -147,6 +147,8 @@ const SideMenu = () => {
               </svg>
               <span className="mx-4 font-medium">Assignment</span>
             </NavLink>
+
+            
 
             <NavLink
               to="/redeem"
