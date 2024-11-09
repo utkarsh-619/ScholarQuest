@@ -1,7 +1,6 @@
 import React from "react";
 
 const SubCard = (props) => {
-    console.log(props)
   return (
     <div className="w-64 lg:p-4 md:p-2 bg-white rounded-lg shadow-md relative overflow-hidden">
       {/* Top Section */}

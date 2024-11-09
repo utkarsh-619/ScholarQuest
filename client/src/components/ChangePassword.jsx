@@ -40,6 +40,11 @@ function ChangePassword() {
         }
       );
       alert("Password updated successfully!");
+      setPasswordData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      });
     } catch (error) {
       console.error("Error updating password:", error);
       alert("Failed to update password.");
