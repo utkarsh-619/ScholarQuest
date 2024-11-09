@@ -267,19 +267,22 @@ const getUserData = asyncHandler(async (req, res) => {
 });
 
 //route to get an array of all users , profile photo, aura point and course name
-const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select('username profilePhoto auraPoints courseEnrollments.courseName');
-  
+const getLeaderBoardData = asyncHandler(async (req, res) => {
+  // Fetch users who have at least one course enrollment
+  const users = await User.find({ "courseEnrollments.0": { $exists: true } })
+    .select("username profilePhoto auraPoints courseEnrollments.courseName");
+
   // Format the response
   const formattedUsers = users.map(user => ({
     username: user.username,
     profilePhoto: user.profilePhoto,
     auraPoints: user.auraPoints,
-    courseName: user.courseEnrollments[0].courseName
+    courseName: user.courseEnrollments[0].courseName,
   }));
 
   return res.status(200).json(new ApiResponse(200, formattedUsers, "Users fetched successfully"));
 });
+
 
 const changePassword = asyncHandler(async (req, res) => {
   const currentPassword = req.body.currentPassword;
@@ -359,7 +362,7 @@ export {
   detailsUser,
   getCourses,
   getUserData,
-  getAllUsers,
+  getLeaderBoardData,
   changePassword,
   deleteUser
 };
