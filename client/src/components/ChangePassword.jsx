@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ChangePassword() {
-  const [passwordData, setPasswordData] = useState({
+  const [passwordData, setPasswordData] = React.useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: ""
   });
+
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -46,12 +49,14 @@ function ChangePassword() {
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        "http://localhost:8000/api/v1/users/delete", // Use the correct API endpoint for account deletion
+        "http://localhost:8000/api/v1/users/delete", // Correct endpoint for account deletion
         {
           withCredentials: true, // Send cookies with the request
         }
       );
       alert("Account deleted successfully!");
+      // Redirect to the signup page after successful deletion
+      navigate("/signup");
     } catch (error) {
       console.error("Error deleting account:", error);
       alert("Failed to delete account.");
@@ -140,10 +145,10 @@ function ChangePassword() {
           </p>
         </div>
 
-        <div className="w-2/5 ">
+        <div className="w-2/5">
           <form className="space-y-4">
             <button
-              type="submit"
+              type="button"
               onClick={handleDelete}
               className="w-1/5 rounded-lg py-2 mt-4 font-semibold text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
             >
