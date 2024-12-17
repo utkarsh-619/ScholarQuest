@@ -221,9 +221,18 @@ const detailsTeacher = asyncHandler (async(req,res) => {
   // take data from teacher;
   // validate the data taken from the user.
   // update the data in the data base for user;
-  const {fname,lname,phonenumber,courses} = req.body
-  
-  // console.log("email ",email);
+  const {fname,lname,phonenumber,course,subject} = req.body
+
+  /* 
+  {
+    fname : 
+    lname :
+    course :
+    subject :
+    totalClasses :
+  }
+
+  */
   
   const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
   
@@ -236,7 +245,6 @@ const detailsTeacher = asyncHandler (async(req,res) => {
   // Only add properties to updateData if they are truthy
   if (fname) updateData.fname = fname;
   if (lname) updateData.lname = lname;
-  if (courses) updateData.courses = courses;
   if (phonenumber) updateData.phonenumber = phonenumber;
   if (profilePhoto) updateData.profilePhoto = profilePhoto.url;
 
