@@ -22,9 +22,9 @@ const generateAccessAndRefreshTokens = async (userId) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { username, email, password, courseId } = req.body;
+  const { username, email, password,role } = req.body;
 
-  if ([email, username, password].some((field) => field?.trim() === "")) {
+  if ([email, username, password,role].some((field) => field?.trim() === "")) {
     throw new ApiError(400, "All fields are required.");
   }
 
@@ -39,19 +39,14 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     email,
     password,
+    role,
     username: username.toLowerCase(),
   });
-
-  if (courseId) {
-    await enrollUserInCourse(user._id, courseId); // Enroll user in the course
-  }
-
   const createdUser = await User.findById(user._id).select("-password -refreshToken");
 
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering the user");
   }
-
   return res.status(201).json(
     new ApiResponse(200, createdUser, "User registered successfully")
   );
@@ -354,6 +349,54 @@ const deleteUser = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User account deleted successfully."));
 });
 
+const submitAssignment = asyncHandler(async (req, res) => {
+  const { courseName, subjectName, assignmentName } = req.body;
+
+  if (!courseName || !subjectName || !assignmentName) {
+    throw new ApiError(400, "Course name, subject name, and assignment name are required.");
+  }
+
+  // Check if there's an uploaded file and get its Cloudinary URL
+  let assignmentFile = null;
+  if (req.files?.assignmentFile && req.files.assignmentFile.length > 0) {
+    const assignmentFileLocalPath = req.files.assignmentFile[0].path;
+    assignmentFile = await uploadOnCloudinary(assignmentFileLocalPath);
+  }
+
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+
+  // Find the specific course and subject
+  const course = user.courseEnrollments.find(c => c.courseName === courseName);
+  if (!course) {
+    throw new ApiError(404, "Course not found.");
+  }
+
+  const subject = course.subjects.find(s => s.subname === subjectName);
+  if (!subject) {
+    throw new ApiError(404, "Subject not found.");
+  }
+
+  // Find the assignment in the subject
+  const assignment = subject.assignments.find(a => a.assignmentName === assignmentName);
+  if (!assignment) {
+    throw new ApiError(404, "Assignment not found.");
+  }
+
+  // Update assignment file and status
+  assignment.assignmentFile = assignmentFile.url;
+  assignment.status = 'completed';
+
+  // Save the updated user document
+  await user.save();
+
+  return res.status(200).json(new ApiResponse(200, {}, "Assignment submitted successfully."));
+});
+
+
 export {
   registerUser,
   loginUser,
@@ -364,7 +407,8 @@ export {
   getUserData,
   getLeaderBoardData,
   changePassword,
-  deleteUser
+  deleteUser,
+  submitAssignment
 };
 
 

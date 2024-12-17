@@ -7,18 +7,22 @@ const SideMenu = () => {
   const [name, setName] = useState();
   const [avatar, setAvatar] = useState();
   const [auraPoints, setAuraPoints] = useState();
+  const [role, setRole] = useState();
 
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/users/data",
+        "http://localhost:8000/api/v1/teacher/data",
         { withCredentials: true }
       );
 
     //   console.log(response.data.data);
       setName(response.data.data.username);
       setAvatar(response.data.data.profilePhoto);
-      setAuraPoints(response.data.data.auraPoints)
+      setAuraPoints(response.data.data.auraPoints);
+      setRole(response.data.data.role);
+      console.log(response.data.data);
+      
       
     } catch (err) {
       console.error("Failed to fetch leaderboard data:", err);
@@ -72,7 +76,7 @@ const SideMenu = () => {
         <div className="flex flex-col justify-between flex-1 mt-6">
           <nav>
             <NavLink
-              to="/dashboard"
+              to={role === "teacher" ? "/teacherDashboard" : "/dashboard"}
               className={({ isActive }) =>
                 `flex items-center px-4 py-2 mt-5 transition-colors transform rounded-md ${
                   isActive
@@ -144,6 +148,8 @@ const SideMenu = () => {
               <span className="mx-4 font-medium">Assignment</span>
             </NavLink>
 
+            
+
             <NavLink
               to="/redeem"
               className={({ isActive }) =>
@@ -199,7 +205,7 @@ const SideMenu = () => {
               alt="avatar"
             />
             <span className="mx-2 font-medium text-gray-800 dark:text-gray-200">
-              {name}
+              {name}{role}
             </span>
           </Link>
         </div>

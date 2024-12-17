@@ -13,10 +13,41 @@ const teacherSchema = new Schema({
     index : true,
   },
 
-  courses : [
+  courses: [
     {
-      type : mongoose.Schema.Types.ObjectId,
-      ref : 'Course',
+      courseName: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      subjects: [
+        {
+          subname: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+          totalClasses: {
+            type: Number,
+            required: true,
+            default: 0
+          },
+
+          assignments: [
+            {
+              assignmentName: {
+                type: String,
+                required: true,
+                trim: true,
+              },
+              dueDate: {
+                type: Date,
+                required: true,
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
 

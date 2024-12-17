@@ -77,7 +77,12 @@ const Signin = () => {
       if (response.status >= 200 && response.status < 300) {
         // Redirect upon successful sign-in or sign-up
         if(isLogIn){
-          navigate("/dashboard");
+          if(role === "teacher"){
+            navigate("/teacherDashboard");
+          }
+          else{
+            navigate("/dashboard");
+          }
         }
         else{
           navigate("/signin");
