@@ -1,0 +1,15 @@
+{
+  "name": "scholarquest",
+  "version": "1.0.0",
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "scripts": {
+    "frontend": "cd client && npm run dev",
+    "backend": "cd backend && npm run dev",
+    "dev": "concurrently --names \"FRONTEND,BACKEND\" --prefix-colors \"blue,green\" \"npm run frontend\" \"npm run backend\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
