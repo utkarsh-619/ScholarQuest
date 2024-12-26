@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginUser, logoutUser, registerUser, refreshAccessToken, detailsUser, getCourses, getUserData, changePassword, deleteUser, getLeaderBoardData, submitAssignment} from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser, refreshAccessToken, detailsUser, getCourses, getUserData, changePassword, deleteUser, getLeaderBoardData, submitAssignment,getSubjectData} from "../controllers/user.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -48,5 +48,7 @@ router.route("/lbddata").get(verifyJWT,getLeaderBoardData)
 router.route("/changepassword").post(verifyJWT,changePassword)
 
 router.route("/delete").delete(verifyJWT,deleteUser)
+
+router.route("/subjectData").get(verifyJWT,getSubjectData)
 
 export default router

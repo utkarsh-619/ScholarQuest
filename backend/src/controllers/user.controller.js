@@ -396,6 +396,15 @@ const submitAssignment = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, {}, "Assignment submitted successfully."));
 });
 
+const getSubjectData = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+  return res.status(200).json(new ApiResponse(200, user.courseEnrollments[0].subjects[0].chapters, "Chapters fetched successfully."));
+})
+
 
 export {
   registerUser,
@@ -408,7 +417,8 @@ export {
   getLeaderBoardData,
   changePassword,
   deleteUser,
-  submitAssignment
+  submitAssignment,
+  getSubjectData
 };
 
 
