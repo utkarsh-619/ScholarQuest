@@ -12,7 +12,7 @@ const SideMenu = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/teacher/data",
+        "http://localhost:8000/api/v1/users/data",
         { withCredentials: true }
       );
 
@@ -21,7 +21,7 @@ const SideMenu = () => {
       setAvatar(response.data.data.profilePhoto);
       setAuraPoints(response.data.data.auraPoints);
       setRole(response.data.data.role);
-      console.log(response.data.data);
+    //   console.log(response.data.data);
       
       
     } catch (err) {

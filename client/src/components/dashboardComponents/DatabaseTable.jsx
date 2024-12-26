@@ -13,7 +13,7 @@ const DatabaseTable = () => {
       );
 
       setSubData(response.data.data.courseEnrollments[0].subjects);
-      console.log(subData)
+    //   console.log(subData)
     } catch (err) {
       console.error("Failed to fetch leaderboard data:", err);
     }

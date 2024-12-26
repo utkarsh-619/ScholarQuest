@@ -32,6 +32,7 @@ ChartJS.register(
 const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [subjects, setSubjects] = useState([]);
+  const [currentUser, setCurrentUser] = useState();
 
   // Fetch subjects and update the state
   const fetchUserData = async () => {
@@ -42,10 +43,12 @@ const Dashboard = () => {
       );
 
       const subjectsData = response.data.data.courseEnrollments[0]?.subjects;
+      
 
       // Ensure the subjects exist in the response
       if (subjectsData && subjectsData.length <= 4) {
         setSubjects(subjectsData.slice(0, 4)); // Only keep the first 4 subjects
+        setCurrentUser(response.data.data._id)
       }
 
     } catch (err) {
@@ -97,6 +100,7 @@ const Dashboard = () => {
       color: subjectColors[index],
       value1: completedCount, // Display count of completed chapters
       value2: remainingCount, // Display count of remaining chapters
+      _id: subject._id,
       doughnutData,
     };
   });
@@ -170,6 +174,8 @@ const Dashboard = () => {
               value1={subject.value1}
               value2={subject.value2}
               color={subject.color}
+              _id={subject._id}
+              currentUser = {currentUser}
               doughnutData={subject.doughnutData} // Pass the doughnut data
             />
           ))}

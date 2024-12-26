@@ -4,26 +4,25 @@ import Dashboard from './pages/Dashboard';
 import LeaderBoard from './pages/LeaderBoard';
 import Assignment from './pages/Assignment';
 import Redeem from './pages/Redeem';
-// import Settings from './pages/Settings';
+import Subject from './pages/Subject';
 import Signin from './pages/auth/singin';
 import Profile from './pages/Profile';
 import TeacherDashboard from './components/teacherDashboard';
-// import SideMenu from './components/SideMenu';
 
 function App() {
   return (
     <Router>
-        <Routes>
+      <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/leaderboard" element={<LeaderBoard />} />
         <Route path="/assignment" element={<Assignment />} />
         <Route path="/redeem" element={<Redeem />} />
-        {/* <Route path="/settings" element={<Settings />} /> */}
+        <Route path="/subject/:id" element={<Subject />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signin />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/teacherDashboard" element={<TeacherDashboard />}/>
-        </Routes>
+        <Route path="/teacherDashboard" element={<TeacherDashboard />} />
+      </Routes>
     </Router>
   );
 }

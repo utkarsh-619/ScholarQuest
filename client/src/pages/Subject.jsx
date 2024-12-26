@@ -1,0 +1,72 @@
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+
+const Subject = () => {
+  const [chapters, setChapters] = useState([]);
+
+  const { id } = useParams();
+  console.log("Received _id:", id);
+
+ 
+
+  const toggleDone = async (id) => {
+    const updatedChapters = chapters.map((chapter) =>
+      chapter.id === id ? { ...chapter, isCompleted: !chapter.isCompleted } : chapter
+    );
+
+    setChapters(updatedChapters);
+
+    // Update the backend
+    try {
+      await fetch(`/api/users/subjectsData`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          isCompleted: !chapters.find((ch) => ch.id === id).isCompleted,
+        }),
+      });
+    } catch (error) {
+      console.error("Error updating chapter:", error);
+      // Rollback the update in case of error
+      setChapters(chapters);
+    }
+  };
+
+  
+
+  return (
+    <div className="bg-gray-900 text-white min-h-screen p-6 font-sans">
+      <h2 className="text-2xl mb-4">Chapters for </h2>
+      <div className="bg-gray-800 p-4 rounded-lg mb-6">
+        <div className="text-sm mb-2">Progress: completed</div>
+        <div className="w-full bg-gray-700 rounded-full h-4">
+          <div
+            className="bg-green-500 h-4 rounded-full"
+          ></div>
+        </div>
+      </div>
+      <ul className="list-none space-y-4">
+        {chapters.map((chapter) => (
+          <li
+            key={chapter.id}
+            className={`p-4 rounded-lg flex items-center justify-between ${
+              chapter.isCompleted ? "bg-green-600" : "bg-gray-700"
+            }`}
+          >
+            <span>{chapter.name}</span>
+            <label className="cursor-pointer flex items-center">
+              <input
+                type="checkbox"
+                checked={chapter.isCompleted}
+                onChange={() => toggleDone(chapter.id)}
+                className="mr-2 scale-125"
+              />
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Subject;
