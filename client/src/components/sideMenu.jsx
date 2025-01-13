@@ -12,7 +12,7 @@ const SideMenu = () => {
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/teacher/data",
+        "http://localhost:8000/api/v1/users/data",
         { withCredentials: true }
       );
 
