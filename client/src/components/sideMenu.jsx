@@ -1,13 +1,24 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { RiCopperCoinFill } from "react-icons/ri";
 import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 const SideMenu = () => {
-  const [name, setName] = useState();
-  const [avatar, setAvatar] = useState();
-  const [auraPoints, setAuraPoints] = useState();
-  const [role, setRole] = useState();
+  const dispatch = useDispatch();
+  //   const [name, setName] = useState();
+  //   const [avatar, setAvatar] = useState();
+  //   const [auraPoints, setAuraPoints] = useState();
+  //   const [role, setRole] = useState();
+
+  const userinfo = useSelector((state) => state.userinfo);
+  //   console.log(userinfo);
+
+  const name = userinfo.user.username;
+  const avatar = userinfo.user.profilePhoto;
+  const auraPoints = userinfo.user.auraPoints;
+  const role = userinfo.user.role;
 
   const fetchUserData = async () => {
     try {
@@ -16,14 +27,12 @@ const SideMenu = () => {
         { withCredentials: true }
       );
 
-    //   console.log(response.data.data);
-      setName(response.data.data.username);
-      setAvatar(response.data.data.profilePhoto);
-      setAuraPoints(response.data.data.auraPoints);
-      setRole(response.data.data.role);
-    //   console.log(response.data.data);
-      
-      
+      dispatch(setUser(response.data.data));
+
+      //   setName(response.data.data.username);
+      //   setAvatar(response.data.data.profilePhoto);
+      //   setAuraPoints(response.data.data.auraPoints);
+      //   setRole(response.data.data.role);
     } catch (err) {
       console.error("Failed to fetch leaderboard data:", err);
     }
@@ -148,8 +157,6 @@ const SideMenu = () => {
               <span className="mx-4 font-medium">Assignment</span>
             </NavLink>
 
-            
-
             <NavLink
               to="/redeem"
               className={({ isActive }) =>
@@ -205,7 +212,8 @@ const SideMenu = () => {
               alt="avatar"
             />
             <span className="mx-2 font-medium text-gray-800 dark:text-gray-200">
-              {name}{role}
+              {name}
+              {role}
             </span>
           </Link>
         </div>

@@ -22,7 +22,6 @@ const LeaderBoard = () => {
       data.sort((a, b) => b.auraPoints - a.auraPoints);
       setLeaderboardData(data);
       setTopUser(data[0]);
-      console.log(data);
       
     } catch (err) {
       console.error("Failed to fetch leaderboard data:", err);

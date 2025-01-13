@@ -1,13 +1,18 @@
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setTemp } from "../../redux/userSlice"
 
-const SummaryCard = ({ title, value1, value2, color, doughnutData, _id, currentUser }) => {
+const SummaryCard = ({ index, title, value1, value2, color, doughnutData, currentUser }) => {
+    // console.log(index);
+    const dispatch = useDispatch();
+    
   return (
-    <Link to={`/subject/${_id}`}>
+    <Link to={`/subject`} onClick={() => dispatch(setTemp(index))} >
       <div
         className={`p-6 rounded-lg shadow-md flex items-center ${color} transition duration-200 transform hover:scale-105`}
-        style={{ maxWidth: "300px", minWidth: "250px" }}
+        style={{ maxWidth: "300px", minWidth: "250px" }} 
       >
         <div className="mr-6 flex-1 overflow-hidden">
           <h3 className="text-xl font-bold text-gray-300 uppercase">{title}</h3>

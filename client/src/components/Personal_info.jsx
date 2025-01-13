@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 const PersonaInfo = () => {
@@ -9,22 +10,28 @@ const PersonaInfo = () => {
     address: "",
     course: "", // this will store the selected course ID
   });
-  const [name, setName] = useState();
-  const [pic, setpic] = useState();
-  const fetchUserData = async () => {
-    try {
-      const userResponse = await axios.get(
-        "http://localhost:8000/api/v1/users/data",
-        {
-          withCredentials: true,
-        }
-      );
-      setName(userResponse.data.data.username);
-      setpic(userResponse.data.data.profilePhoto);
-    } catch (err) {
-      console.error("Failed to fetch courses:", err);
-    }
-  };
+//   const [name, setName] = useState();
+//   const [pic, setpic] = useState();
+
+  const userinfo = useSelector((state) => state.userinfo);
+  const name = userinfo.user.username;
+  const pic = userinfo.user.profilePhoto;
+
+
+//   const fetchUserData = async () => {
+//     try {
+//       const userResponse = await axios.get(
+//         "http://localhost:8000/api/v1/users/data",
+//         {
+//           withCredentials: true,
+//         }
+//       );
+//       setName(userResponse.data.data.username);
+//       setpic(userResponse.data.data.profilePhoto);
+//     } catch (err) {
+//       console.error("Failed to fetch courses:", err);
+//     }
+//   };
 
   const [profilePhoto, setAvatar] = useState();
   const [allCourses, setAllCourses] = useState([]); // Initialize as an empty array
@@ -81,7 +88,6 @@ const PersonaInfo = () => {
       const courseResponse = await axios.get('http://localhost:8000/api/v1/users/courses', {
         withCredentials: true,
       });
-      console.log(courseResponse.data);
       
       setAllCourses(courseResponse.data.data); // Use the data from the response
     } catch (err) {
@@ -91,7 +97,7 @@ const PersonaInfo = () => {
 
   useEffect(() => {
     fetchCourses(); // Fetch the courses when the component mounts
-    fetchUserData(); // Fetch the user when the component mounts
+    // fetchUserData(); // Fetch the user when the component mounts
   }, []);
 
   return (

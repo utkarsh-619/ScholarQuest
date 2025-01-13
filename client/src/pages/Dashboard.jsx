@@ -5,6 +5,7 @@ import SummaryCard from "../components/dashboardComponents/SummaryCard";
 import BarChartSection from "../components/dashboardComponents/BarChartSection";
 import CalendarSection from "../components/dashboardComponents/CalendarSection";
 import DatabaseTable from "../components/dashboardComponents/DatabaseTable";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
 // Chart.js registration and imports
@@ -34,7 +35,15 @@ const Dashboard = () => {
   const [subjects, setSubjects] = useState([]);
   const [currentUser, setCurrentUser] = useState();
 
-  // Fetch subjects and update the state
+//   const userinfo = useSelector((state) => state.userinfo);
+//   const data = userinfo.user?.courseEnrollments[0]?.subjects || [];
+
+//   if (data && data.length <= 4) {
+//     setSubjects(data.slice(0, 4)); // Only keep the first 4 subjects
+//     setCurrentUser(data.user._id)
+//   }
+
+//   Fetch subjects and update the state
   const fetchUserData = async () => {
     try {
       const response = await axios.get(
@@ -170,11 +179,11 @@ const Dashboard = () => {
           {subjectsData.map((subject, index) => (
             <SummaryCard
               key={index}
+              index = {index}
               title={subject.title}
               value1={subject.value1}
               value2={subject.value2}
               color={subject.color}
-              _id={subject._id}
               currentUser = {currentUser}
               doughnutData={subject.doughnutData} // Pass the doughnut data
             />

@@ -17,7 +17,7 @@ function App() {
         <Route path="/leaderboard" element={<LeaderBoard />} />
         <Route path="/assignment" element={<Assignment />} />
         <Route path="/redeem" element={<Redeem />} />
-        <Route path="/subject/:id" element={<Subject />} />
+        <Route path="/subject" element={<Subject />} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signin />} />
         <Route path="/profile" element={<Profile />} />

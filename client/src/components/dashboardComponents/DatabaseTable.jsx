@@ -1,27 +1,34 @@
 import React, {useState,useEffect} from "react";
-import axios from "axios";
+import { useSelector } from "react-redux";
+// import axios from "axios";
 
 const DatabaseTable = () => {
     const [attendance, setAttendence] = useState('Present');
-  const [subData, setSubData] = useState([]);
+//   const [subData, setSubData] = useState([]);
 
-  const fetchUserData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8000/api/v1/users/data",
-        { withCredentials: true }
-      );
+  const userinfo = useSelector((state) => state.userinfo);
+//   console.log(userinfo.user.courseEnrollments[0].subjects);
+  
+const subData = userinfo.user.courseEnrollments?.[0]?.subjects || [];
+    // console.log(x)
 
-      setSubData(response.data.data.courseEnrollments[0].subjects);
-    //   console.log(subData)
-    } catch (err) {
-      console.error("Failed to fetch leaderboard data:", err);
-    }
-  };
+//   const fetchUserData = async () => {
+//     try {
+//       const response = await axios.get(
+//         "http://localhost:8000/api/v1/users/data",
+//         { withCredentials: true }
+//       );
 
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+//       setSubData(response.data.data.courseEnrollments[0].subjects);
+//     //   console.log(subData)
+//     } catch (err) {
+//       console.error("Failed to fetch leaderboard data:", err);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchUserData();
+//   }, []);
 
   return (
     <div className="p-6 bg-gray-700 rounded-lg shadow-lg mb-6">
