@@ -66,7 +66,12 @@ const enrollUserInCourse = async (userId, courseId) => {
       throw new ApiError(404, "User not found");
     }
 
-    // Create the course enrollment structure with subjects and chapters
+    // Validate course structure
+    if (!Array.isArray(course.subjects)) {
+      throw new ApiError(500, "Course subjects are invalid");
+    }
+
+    // Prepare the course enrollment structure
     const courseEnrollment = {
       courseName: course.name,
       subjects: course.subjects.map((subject) => ({
@@ -74,10 +79,12 @@ const enrollUserInCourse = async (userId, courseId) => {
         attendedClasses: 0,
         totalClasses: 0,
         assignments: [],
-        chapters: subject.chapters.map((chapter) => ({
-          name: chapter.name,
-          isCompleted: false,
-        })),
+        chapters: Array.isArray(subject.chapters)
+          ? subject.chapters.map((chapter) => ({
+              name: chapter.name,
+              isCompleted: false,
+            }))
+          : [],
       })),
     };
 
@@ -86,15 +93,27 @@ const enrollUserInCourse = async (userId, courseId) => {
       (enrollment) => enrollment.courseName === course.name
     );
 
-    // If not already enrolled, add the course to user's enrollments
     if (!alreadyEnrolled) {
+      // Add user to the course's studentsEnrolled if not already present
+      if (!course.studentsEnrolled.includes(userId)) {
+        course.studentsEnrolled.push(userId);
+      }
+
+      // Add the course enrollment to the user's enrollments
       user.courseEnrollments = courseEnrollment;
+
+      // Save both the user and the course
+      await course.save();
       await user.save();
+    } else {
+      throw new ApiError(400, "User is already enrolled in this course");
     }
   } catch (error) {
-    throw new ApiError(500, "Error enrolling user in course");
+    console.error("Error enrolling user in course:", error);
+    throw new ApiError(500, `Error enrolling user in course: ${error.message}`);
   }
 };
+
 
 
 const loginUser = asyncHandler(async (req, res) => {

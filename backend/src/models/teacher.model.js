@@ -15,6 +15,10 @@ const teacherSchema = new Schema({
 
   courses: [
     {
+      courseId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
+      },
       courseName: {
         type: String,
         required: true,
@@ -43,6 +47,9 @@ const teacherSchema = new Schema({
               dueDate: {
                 type: Date,
                 required: true,
+              },
+              assignmentFile : {
+                type : String,
               }
             }
           ]
