@@ -1,24 +1,28 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // Uses localStorage by default
+import storage from 'redux-persist/lib/storage'; 
 import userSlice from './userSlice';
+import teacherSlice from './teacherSlice'
 
-// Configure persistence settings
-const persistConfig = {
-  key: 'userinfo', // Key for local storage
-  storage,         // Storage type
+const userPersistConfig = {
+  key: 'userinfo', 
+  storage,         
 };
+const teacherPersistConfig = {
+  key: 'teacherinfo',
+  storage,
+}
 
-// Apply the persist reducer to your user slice
-const persistedReducer = persistReducer(persistConfig, userSlice);
+const persistedUserReducer = persistReducer(userPersistConfig, userSlice);
+const persistedTeacherReducer = persistReducer(teacherPersistConfig, teacherSlice);
 
 const store = configureStore({
   reducer: {
-    userinfo: persistedReducer, // Use persisted reducer for userinfo
+    userinfo: persistedUserReducer,
+    teacherinfo: persistedTeacherReducer
   },
 });
 
-// Create the persistor object
 export const persistor = persistStore(store);
 
 export default store;
