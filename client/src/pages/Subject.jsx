@@ -42,7 +42,15 @@ const Subject = () => {
       <div className="bg-gray-800 p-4 rounded-lg mb-6">
         <div className="text-sm mb-2">Progress: completed</div>
         <div className="w-full bg-gray-700 rounded-full h-4">
-          <div className="bg-green-500 h-4 rounded-full"></div>
+          <div className="bg-green-500 h-4 rounded-full"
+            style={{
+              width: `${
+                (chapters.filter((ch) => ch.isCompleted).length /
+                  chapters.length) *
+                100
+              }%`,
+            }}
+          ></div>
         </div>
       </div>
       <ul className="list-none space-y-4">
@@ -57,7 +65,7 @@ const Subject = () => {
             <label className="cursor-pointer flex items-center">
               <input
                 type="checkbox"
-                checked={chapter.isCompleted}
+                checked={chapter.isCompleted }
                 onChange={() => toggleDone(chapter.id)}
                 className="mr-2 scale-125"
               />
