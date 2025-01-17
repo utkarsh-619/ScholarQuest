@@ -216,51 +216,99 @@ const refreshAccessToken = asyncHandler(async (req,res)=>{
 
 })
 
+const enrollUserInCourse = async (userId, courseId) => {
+  // console.log(userId, courseId);
+  try {
+    // Find the course by ID
+    const course = await Course.findById(courseId);
+    if (!course) {
+      throw new ApiError(404, "Course not found");
+    }
 
-const detailsTeacher = asyncHandler (async(req,res) => {
-  // take data from teacher;
-  // validate the data taken from the user.
-  // update the data in the data base for user;
-  const {fname,lname,phonenumber,course,subject} = req.body
+    // Find the teacher by ID
+    const teacher = await Teacher.findById(userId);
+    if (!teacher) {
+      throw new ApiError(404, "Teacher not found");
+    }
+    
+    // Validate course structure
+    if (!Array.isArray(course.subjects)) {
+      throw new ApiError(500, "Course subjects are invalid");
+    }
 
-  /* 
-  {
-    fname : 
-    lname :
-    course :
-    subject :
-    totalClasses :
+    // Prepare the course enrollment structure
+    const courseEnrollment = {
+      courseId: course._id,
+      courseName: course.name,
+      subjects: course.subjects.map((subject) => ({
+        subname: subject.name,
+        totalClasses: 0,
+        assignments: [],
+      })),
+    };
+
+    // Check if the teacher is already enrolled in this course
+    // console.log();
+    
+    const alreadyEnrolled = teacher.courses.some(
+      (enrollment) => enrollment.courseName === course.name
+    );
+
+    if (!alreadyEnrolled) {
+      // Add teacher to the course's studentsEnrolled if not already present
+      if (!course.studentsEnrolled.includes(userId)) {
+        course.studentsEnrolled.push(userId);
+      }
+
+      // Add the course enrollment to the teacher's enrollments
+      teacher.courses.push(courseEnrollment);
+
+      // Save both the teacher and the course
+      await course.save();
+      await teacher.save();
+    } else {
+      throw new ApiError(400, "Teacher is already enrolled in this course");
+    }
+  } catch (error) {
+    console.error("Error enrolling teacher in course:", error);
+    throw new ApiError(500, `Error enrolling teacher in course: ${error.message}`);
   }
+};
 
-  */
-  
-  const profilePhotoLocalPath = req.files?.profilePhoto[0]?.path
-  
-  var profilePhoto = null;
-  if(profilePhotoLocalPath){
+
+const detailsTeacher = asyncHandler(async (req, res) => {
+  const { fname, lname, registrationNumber, phonenumber, courseId } = req.body;
+
+  let profilePhoto = null;
+  if (req.files?.profilePhoto && req.files.profilePhoto.length > 0) {
+    const profilePhotoLocalPath = req.files.profilePhoto[0].path;
+
+    // Upload profile photo if a path is available
     profilePhoto = await uploadOnCloudinary(profilePhotoLocalPath);
   }
-  const updateData = {};
 
-  // Only add properties to updateData if they are truthy
+  const updateData = {};
   if (fname) updateData.fname = fname;
   if (lname) updateData.lname = lname;
+  if (registrationNumber) updateData.registrationNumber = registrationNumber;
   if (phonenumber) updateData.phonenumber = phonenumber;
   if (profilePhoto) updateData.profilePhoto = profilePhoto.url;
 
-  // Perform the update
-  await Teacher.updateOne({ _id: req.user._id }, {
-    fname : updateData.fname,
-    lname : updateData.lname,
-    phonenumber : updateData.phonenumber,
-    profilePhoto : updateData.profilePhoto
-  });
-  
-  return res.status(201).json(
-    new ApiResponse(200,"Teacher data updated Successfully")
-  )
-})
+  await Teacher.updateOne({ _id: req.teacher._id }, updateData);
 
+  if (courseId) {
+    
+    await enrollUserInCourse(req.teacher._id, courseId);
+  }
+
+  const updatedUser = await Teacher.findById(req.teacher._id).select(
+    "-password -refreshToken"
+  );
+
+  return res.status(201).json(
+    new ApiResponse(200, updatedUser, "Teacher data updated successfully")
+  );
+});
 const getCourses = asyncHandler(async(req,res)=>{
   const courses = await Course.find()
   return res.status(200).json(new ApiResponse(200,courses,"Courses fetched successfully"))
