@@ -13,28 +13,59 @@ const Subject = () => {
     setChapters(newChapters);
   }, [userinfo, temp]);
 
-  const toggleDone = async (id) => {
-    const updatedChapters = chapters.map((chapter) =>
-      chapter.id === id ? { ...chapter, isCompleted: !chapter.isCompleted } : chapter
-    );
+  // const toggleDone = async (index) => {
+  //   const updatedChapters = chapters.map((chapter, i) =>
+  //     (i === index) ? { ...chapter, isCompleted: !chapter.isCompleted } : chapter
+  //   );
 
-    setChapters(updatedChapters);
+  //   setChapters(updatedChapters);
 
+  //   try {
+  //     await fetch(`/api/users/subjectsData`, {
+  //       method: "PATCH",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         id,
+  //         isCompleted: updatedChapters.find((ch) => ch.id === id).isCompleted,
+  //       }),
+  //     });
+  //   } catch (error) {
+  //     console.error("Error updating chapter:", error);
+  //     // Rollback the update in case of error
+  //     setChapters(chapters);
+  //   }
+  // };
+
+  const toggleDone = async (index) => {
+    let updatedChapters;
+  
+    setChapters((prevChapters) => {
+      updatedChapters = prevChapters.map((chapter, i) =>
+        i === index ? { ...chapter, isCompleted: !chapter.isCompleted } : chapter
+      );
+      return updatedChapters;
+    });
+  
+    // Get the ID of the updated chapter
+    const updatedChapter = updatedChapters[index];
+  
     try {
       await fetch(`/api/users/subjectsData`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id,
-          isCompleted: updatedChapters.find((ch) => ch.id === id).isCompleted,
+          id: updatedChapter.id, // Get the correct ID
+          isCompleted: updatedChapter.isCompleted,
         }),
       });
     } catch (error) {
       console.error("Error updating chapter:", error);
-      // Rollback the update in case of error
-      setChapters(chapters);
+      // Rollback in case of error
+      setChapters((prevChapters) => [...prevChapters]);
     }
   };
+
+
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-6 font-sans">
@@ -54,7 +85,7 @@ const Subject = () => {
         </div>
       </div>
       <ul className="list-none space-y-4">
-        {chapters.map((chapter) => (
+        {chapters.map((chapter, index) => (
           <li
             key={chapter.id}
             className={`p-4 rounded-lg flex items-center justify-between ${
@@ -66,7 +97,7 @@ const Subject = () => {
               <input
                 type="checkbox"
                 checked={chapter.isCompleted }
-                onChange={() => toggleDone(chapter.id)}
+                onChange={() => toggleDone(index)}
                 className="mr-2 scale-125"
               />
             </label>

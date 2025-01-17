@@ -4,6 +4,7 @@ import { RiCopperCoinFill } from "react-icons/ri";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../redux/userSlice";
+import { setTeacherData } from "../redux/teacherSlice";
 
 const SideMenu = () => {
   const dispatch = useDispatch();
@@ -13,12 +14,17 @@ const SideMenu = () => {
   //   const [role, setRole] = useState();
 
   const userinfo = useSelector((state) => state.userinfo);
-  //   console.log(userinfo);
+  const teacherinfo = useSelector((state) => state.teacherinfo);
+    console.log(teacherinfo);
+    console.log(userinfo);
 
   const name = userinfo.user.username;
   const avatar = userinfo.user.profilePhoto;
   const auraPoints = userinfo.user.auraPoints;
   const role = userinfo.user.role;
+  // const tname = userinfo.teacher.username;
+  // const tavatar = userinfo.teacher.profilePhoto;
+  // const tauraPoints = userinfo.teacher.auraPoints;
 
   const fetchUserData = async () => {
     try {
@@ -45,7 +51,7 @@ const SideMenu = () => {
         { withCredentials: true }
       );
   
-      dispatch(setTeacher(response.data.data));
+      dispatch(setTeacherData(response.data.data));
     } catch (err) {
       console.error("Failed to fetch teacher data:", err);
     }
