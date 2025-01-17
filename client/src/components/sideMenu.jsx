@@ -38,9 +38,28 @@ const SideMenu = () => {
     }
   };
 
+  const fetchTeacherData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8000/api/v1/teacher/data",
+        { withCredentials: true }
+      );
+  
+      dispatch(setTeacher(response.data.data));
+    } catch (err) {
+      console.error("Failed to fetch teacher data:", err);
+    }
+  };
+
   useEffect(() => {
-    fetchUserData();
-  }, []);
+    const fetchData = async () => {
+      await fetchUserData();
+      await fetchTeacherData();
+    };
+
+    fetchData();
+  }, [dispatch]); 
+
 
   return (
     <div className="mr-64">
