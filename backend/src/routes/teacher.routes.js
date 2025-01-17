@@ -35,4 +35,11 @@ router.route("/courses").get(verifyJWT,getCourses)
 
 router.route("/data").get(verifyJWT,getTeacherData)
 
+// router.route("/uploadassignment").post(upload.fields([
+//   {
+//     name: "assignmentFile",
+//     maxCount: 1,
+//   }
+// ]),verifyJWT,assignAssignment)
+
 export default router
