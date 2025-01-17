@@ -13,58 +13,45 @@ const Subject = () => {
     setChapters(newChapters);
   }, [userinfo, temp]);
 
-  // const toggleDone = async (index) => {
-  //   const updatedChapters = chapters.map((chapter, i) =>
-  //     (i === index) ? { ...chapter, isCompleted: !chapter.isCompleted } : chapter
-  //   );
-
-  //   setChapters(updatedChapters);
-
-  //   try {
-  //     await fetch(`/api/users/subjectsData`, {
-  //       method: "PATCH",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         id,
-  //         isCompleted: updatedChapters.find((ch) => ch.id === id).isCompleted,
-  //       }),
-  //     });
-  //   } catch (error) {
-  //     console.error("Error updating chapter:", error);
-  //     // Rollback the update in case of error
-  //     setChapters(chapters);
-  //   }
-  // };
-
-  const toggleDone = async (index) => {
-    let updatedChapters;
   
+
+  const toggleDone = (index) => {
     setChapters((prevChapters) => {
-      updatedChapters = prevChapters.map((chapter, i) =>
+      const updatedChapters = prevChapters.map((chapter, i) =>
         i === index ? { ...chapter, isCompleted: !chapter.isCompleted } : chapter
       );
+  
+      const courseName = userinfo.user?.courseEnrollments?.[0]?.courseName;
+      const subjectName = userinfo.user?.courseEnrollments?.[0]?.subjects?.[temp]?.subname;
+      const chapterId = updatedChapters?.[index]?._id;
+      const isCompleted = updatedChapters?.[index]?.isCompleted;
+  
+      console.log(courseName, subjectName, chapterId, isCompleted); 
+  
+      if (!courseName || !subjectName || !chapterId) {
+        console.error("Missing required IDs for updating chapter.");
+        return prevChapters; // Prevent incorrect state update
+      }
+  
+      // Perform API request after state update
+      setTimeout(async () => {
+        try {
+          await axios.patch("/api/users/chapterUpdate", {
+            courseName,
+            subjectName,
+            chapterId
+          });
+    
+          console.log("Chapter status updated successfully");
+        } catch (error) {
+          console.error("Error updating chapter:", error);
+        }
+      }, 0);
+  
       return updatedChapters;
     });
-  
-    // Get the ID of the updated chapter
-    const updatedChapter = updatedChapters[index];
-  
-    try {
-      await fetch(`/api/users/subjectsData`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: updatedChapter.id, // Get the correct ID
-          isCompleted: updatedChapter.isCompleted,
-        }),
-      });
-    } catch (error) {
-      console.error("Error updating chapter:", error);
-      // Rollback in case of error
-      setChapters((prevChapters) => [...prevChapters]);
-    }
   };
-
+  
 
 
   return (
