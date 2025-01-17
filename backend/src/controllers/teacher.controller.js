@@ -321,4 +321,53 @@ const getTeacherData = asyncHandler(async(req,res)=>{
   const teacher = await Teacher.findById(req.teacher._id)
   return res.status(200).json(new ApiResponse(200,teacher,"Teacher data fetched successfully"))
 })
+
+const assignAssignment = asyncHandler(async (req, res) => {
+  const { courseId, subjectName, assignmentName } = req.body;
+
+  if (!courseId || !subjectName || !assignmentName) {
+    throw new ApiError(400, "Course id, subject name, and assignment name are required.");
+  }
+
+  // Check if there's an uploaded file and get its Cloudinary URL
+  let assignmentFile = null;
+  if (req.files?.assignmentFile && req.files.assignmentFile.length > 0) {
+    const assignmentFileLocalPath = req.files.assignmentFile[0].path;
+    assignmentFile = await uploadOnCloudinary(assignmentFileLocalPath);
+  }
+
+  const teacher = await Teacher.findById(req.teacher._id);
+
+  if (!teacher) {
+    throw new ApiError(404, "Teacher not found.");
+  }
+
+  // Find the specific course and subject
+  const course = teacher.courses.find(c => c.courseId === courseId);
+  if (!course) {
+    throw new ApiError(404, "Course not found.");
+  }
+
+  const subject = course.subjects.find(s => s.subname === subjectName);
+  if (!subject) {
+    throw new ApiError(404, "Subject not found.");
+  }
+
+  // Find the assignment in the subject
+  const assignment = subject.assignments.find(a => a.assignmentName === assignmentName);
+  if (!assignment) {
+    throw new ApiError(404, "Assignment not found.");
+  }
+
+  // Update assignment file and status
+  assignment.assignmentFile = assignmentFile.url;
+  assignment.status = 'completed';
+
+  // Save the updated teacher document
+  await teacher.save();
+
+  return res.status(200).json(new ApiResponse(200, {}, "Assignment submitted successfully."));
+});
+
+
 export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken,detailsTeacher,getCourses,getTeacherData}

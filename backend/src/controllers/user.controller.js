@@ -424,7 +424,44 @@ const getSubjectData = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, user.courseEnrollments[0].subjects[0].chapters, "Chapters fetched successfully."));
 })
 
+const chapterUpdate = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  // console.log(userId);
+  
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
+  const { courseName, subjectName, chapterId } = req.body;
+  console.log(courseName, subjectName, chapterId);
+  
+  if (!courseName || !subjectName || !chapterId) {
+    throw new ApiError(400, "Course ID, Subject ID, and Chapter ID are required.");
+  }
 
+  const course = user.courseEnrollments.find(c => c.courseName === courseName);
+  if (!course) {
+    throw new ApiError(404, "Course not found.");
+  }
+
+  const subject = course.subjects.find(s => s.subname === subjectName);
+  if (!subject) {
+    throw new ApiError(404, "Subject not found.");
+  }
+
+  const chapter = subject.chapters.find(c => c.id === chapterId);
+  if (!chapter) {
+    throw new ApiError(404, "Chapter not found.");
+  }
+
+  chapter.isCompleted = !chapter.isCompleted;
+
+  await user.save();
+
+  return res.status(200).json(new ApiResponse(200, {}, "Chapter updated successfully."));
+})
+
+  
 export {
   registerUser,
   loginUser,
@@ -437,7 +474,8 @@ export {
   changePassword,
   deleteUser,
   submitAssignment,
-  getSubjectData
+  getSubjectData,
+  chapterUpdate
 };
 
 
