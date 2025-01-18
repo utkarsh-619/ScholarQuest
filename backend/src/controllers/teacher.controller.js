@@ -323,10 +323,10 @@ const getTeacherData = asyncHandler(async(req,res)=>{
 })
 
 const assignAssignment = asyncHandler(async (req, res) => {
-  const { courseId, subjectName, assignmentName } = req.body;
+  const { courseId, subjectName, assignmentName, dueDate } = req.body;
 
-  if (!courseId || !subjectName || !assignmentName) {
-    throw new ApiError(400, "Course id, subject name, and assignment name are required.");
+  if (!courseId || !subjectName || !assignmentName || !dueDate) {
+    throw new ApiError(400, "Course ID, subject name, and assignment name are required.");
   }
 
   // Check if there's an uploaded file and get its Cloudinary URL
@@ -336,38 +336,88 @@ const assignAssignment = asyncHandler(async (req, res) => {
     assignmentFile = await uploadOnCloudinary(assignmentFileLocalPath);
   }
 
-  const teacher = await Teacher.findById(req.teacher._id);
-
-  if (!teacher) {
-    throw new ApiError(404, "Teacher not found.");
-  }
-
-  // Find the specific course and subject
-  const course = teacher.courses.find(c => c.courseId === courseId);
+  // Find the course
+  // console.log(courseId);
+  
+  const ccourse = await Course.findById(courseId);
+  const course = await ccourse.populate("studentsEnrolled");
+  console.log(course);
+  
   if (!course) {
     throw new ApiError(404, "Course not found.");
   }
 
-  const subject = course.subjects.find(s => s.subname === subjectName);
+  // Find the subject within the course
+  const subject = course.subjects.find(s => s.name === subjectName.toLowerCase());
   if (!subject) {
     throw new ApiError(404, "Subject not found.");
   }
 
-  // Find the assignment in the subject
-  const assignment = subject.assignments.find(a => a.assignmentName === assignmentName);
-  if (!assignment) {
-    throw new ApiError(404, "Assignment not found.");
+  // Check if the assignment already exists
+  const existingAssignment = subject.assignments?.find(a => a.assignmentName === assignmentName);
+  if (existingAssignment) {
+    throw new ApiError(400, "Assignment with this name already exists.");
   }
 
-  // Update assignment file and status
-  assignment.assignmentFile = assignmentFile.url;
-  assignment.status = 'completed';
+  // Create a new assignment
+  const newAssignment = {
+    assignmentName,
+    dueDate: new Date(dueDate),
+    assignmentFile: assignmentFile?.url || null,
+  };
 
-  // Save the updated teacher document
+  // Add the assignment to the course's subject
+  if (!subject.assignments) {
+    subject.assignments = [];
+  }
+  subject.assignments.push(newAssignment);
+
+  // Save the updated course
+  await course.save();
+
+  // Update the teacher's record
+  const teacher = await Teacher.findById(req.teacher._id);
+  if (!teacher) {
+    throw new ApiError(404, "Teacher not found.");
+  }
+
+  const teacherCourse = teacher.courses.find(c => c.courseId.toString() === courseId);
+  if (!teacherCourse) {
+    throw new ApiError(404, "Teacher's course not found.");
+  }
+
+  const teacherSubject = teacherCourse.subjects.find(s => s.subname === subjectName);
+  if (!teacherSubject) {
+    throw new ApiError(404, "Teacher's subject not found.");
+  }
+
+  if (!teacherSubject.assignments) {
+    teacherSubject.assignments = [];
+  }
+  teacherSubject.assignments.push(newAssignment);
   await teacher.save();
 
-  return res.status(200).json(new ApiResponse(200, {}, "Assignment submitted successfully."));
+  // Update the students' records
+  for (const student of course.studentsEnrolled) {
+    const studentCourse = student.courseEnrollments.find(c => c.courseName === course.name);
+    const studentSubject = studentCourse?.subjects.find(s => s.subname === subjectName);
+
+    if (studentSubject) {
+      studentSubject.assignments.push({
+        assignmentName,
+        dueDate: new Date(dueDate),
+        assignmentFile: assignmentFile?.url || null,
+        status: 'pending',
+      });
+      await student.save();
+    }
+  }
+
+  return res.status(200).json(new ApiResponse(200, {}, "Assignment assigned successfully."));
 });
 
 
-export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken,detailsTeacher,getCourses,getTeacherData}
+
+
+
+export {registerTeacher,loginTeacher,logoutTeacher,refreshAccessToken,detailsTeacher,getCourses,getTeacherData,assignAssignment}

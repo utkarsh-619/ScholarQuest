@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { loginTeacher, logoutTeacher, registerTeacher, refreshAccessToken, detailsTeacher, getCourses, getTeacherData} from "../controllers/teacher.controller.js";
+import { loginTeacher, logoutTeacher, registerTeacher, refreshAccessToken, detailsTeacher, getCourses, getTeacherData, assignAssignment} from "../controllers/teacher.controller.js";
 import {upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -35,11 +35,11 @@ router.route("/courses").get(verifyJWT,getCourses)
 
 router.route("/data").get(verifyJWT,getTeacherData)
 
-// router.route("/uploadassignment").post(upload.fields([
-//   {
-//     name: "assignmentFile",
-//     maxCount: 1,
-//   }
-// ]),verifyJWT,assignAssignment)
+router.route("/uploadassignment").post(upload.fields([
+  {
+    name: "assignmentFile",
+    maxCount: 1,
+  }
+]),verifyJWT,assignAssignment)
 
 export default router

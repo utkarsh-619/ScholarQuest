@@ -46,7 +46,6 @@ const teacherSchema = new Schema({
               },
               dueDate: {
                 type: Date,
-                required: true,
               },
               assignmentFile : {
                 type : String,
