@@ -76,7 +76,6 @@ const userSchema = new Schema({
               },
               dueDate: {
                 type: Date,
-                required: true,
               },
               status: {
                 type: String,
