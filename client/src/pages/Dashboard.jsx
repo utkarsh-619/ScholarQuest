@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import SideMenu from "../components/SideMenu";
+import SideMenu from "../components/sideMenu";
 import Header from "../components/dashboardComponents/Header";
 import SummaryCard from "../components/dashboardComponents/SummaryCard";
 import BarChartSection from "../components/dashboardComponents/BarChartSection";

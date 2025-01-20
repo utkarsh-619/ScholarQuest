@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
 
 const Subject = () => {
   const [chapters, setChapters] = useState([]);
   const userinfo = useSelector((state) => state.userinfo);
   const temp = useSelector((state) => state.userinfo.temp);
+  const dispatch = useDispatch();
 
   // Update chapters when userinfo or temp changes
   useEffect(() => {
+    
     const newChapters =
-      userinfo.user?.courseEnrollments[0]?.subjects[temp]?.chapters || [];
+      userinfo.user?.courseEnrollments?.[0]?.subjects[temp]?.chapters || [];
     setChapters(newChapters);
   }, [userinfo, temp]);
 
@@ -36,13 +41,33 @@ const Subject = () => {
       // Perform API request after state update
       setTimeout(async () => {
         try {
-          await axios.patch("/api/users/chapterUpdate", {
+          await axios.post("http://localhost:8000/api/v1/users/chapterUpdate", {
             courseName,
             subjectName,
             chapterId
+          },{
+            withCredentials: true
           });
     
           console.log("Chapter status updated successfully");
+
+          
+          try {
+            const userResponse = await axios.get(
+              "http://localhost:8000/api/v1/users/data",
+              {
+                withCredentials: true,
+              }
+            );
+            console.log(userResponse.data.data);
+            dispatch(setUser(userResponse.data.data));
+            // setChapters(userResponse.data.data.username);
+            // setpic(userResponse.data.data.profilePhoto);
+          } catch (err) {
+            console.error("Failed to fetch courses:", err);
+          }
+              
+
         } catch (error) {
           console.error("Error updating chapter:", error);
         }

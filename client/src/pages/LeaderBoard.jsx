@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SideMenu from '../components/sideMenu';
+import SideMenu from "../components/sideMenu";
 import Confetti from 'react-confetti';
 import { RiCopperCoinFill } from 'react-icons/ri';
 import { useWindowSize } from 'react-use';

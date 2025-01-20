@@ -1,6 +1,6 @@
 import React from "react";
 import Axios from "axios"; // Import Axios
-import SideMenu from "../components/SideMenu";
+import SideMenu from "../components/sideMenu";
 import PersonalInfo from "../components/Personal_info";
 import ChangePassword from "../components/ChangePassword";
 import { useNavigate } from "react-router-dom"; // Use useNavigate for redirecting

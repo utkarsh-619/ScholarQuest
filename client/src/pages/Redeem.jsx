@@ -1,5 +1,5 @@
 import React from 'react';
-import SideMenu from '../components/SideMenu';
+import SideMenu from '../components/sideMenu';
 import Card from '../components/Card';
 
 const Redeem = () => {
