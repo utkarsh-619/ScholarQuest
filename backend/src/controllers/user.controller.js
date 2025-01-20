@@ -453,8 +453,9 @@ const chapterUpdate = asyncHandler(async (req, res) => {
   if (!chapter) {
     throw new ApiError(404, "Chapter not found.");
   }
-
+  if(chapter.isCompleted == false)user.auraPoints += 10;
   chapter.isCompleted = !chapter.isCompleted;
+
 
   await user.save();
 
