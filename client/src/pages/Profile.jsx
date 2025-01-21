@@ -4,27 +4,48 @@ import SideMenu from "../components/sideMenu";
 import PersonalInfo from "../components/Personal_info";
 import ChangePassword from "../components/ChangePassword";
 import { useNavigate } from "react-router-dom"; // Use useNavigate for redirecting
+import { logoutUser } from "../redux/userSlice";
+import { logoutTeacher } from "../redux/teacherSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Profile = () => {
-  const navigate = useNavigate(); // Hook to navigate after logout
-
+  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const userinfo = useSelector((state) => state.userinfo);
+  const teacherinfo = useSelector((state) => state.teacherinfo);
+  console.log(teacherinfo);
+  console.log(userinfo);
+  
+  
   // Function to handle the logout
   const handleLogout = async () => {
-    try {
-      const response = await Axios.post("http://localhost:8000/api/v1/users/logout", {
-        
-      },{
-        withCredentials: true
-      });
-      console.log(response.data); 
-      // After logout, clear any local storage or session storage
+    const role = userinfo?.user?.role || teacherinfo?.teacher?.role;
+    console.log(role);
 
-      // Redirect to login page or homepage after successful logout
+    try {
+      let apiEndpoint;
+      
+      if (role === "teacher") {
+        apiEndpoint = "http://localhost:8000/api/v1/teacher/logout";
+      } else {
+        apiEndpoint = "http://localhost:8000/api/v1/users/logout";
+      }
+
+      const response = await Axios.post(apiEndpoint, {}, { withCredentials: true });
+      console.log(response.data);
+
+      // Dispatch correct logout action based on role
+      if (role === "teacher") {
+        dispatch(logoutTeacher()); // Clear teacher state
+      } else {
+        dispatch(logoutUser()); // Clear student state
+      }
+
       alert("Logout successfully");
-      navigate("/signin"); // Use navigate to redirect to the login page
+      navigate("/signin"); // Redirect to sign-in page
+
     } catch (error) {
       console.error("Error logging out:", error);
-      // Handle error, like showing a message to the user
     }
   };
 

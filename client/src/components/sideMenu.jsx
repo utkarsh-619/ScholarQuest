@@ -21,10 +21,10 @@ const SideMenu = () => {
   const name = userinfo.user.username;
   const avatar = userinfo.user.profilePhoto;
   const auraPoints = userinfo.user.auraPoints;
-  const role = userinfo.user.role;
-  // const tname = userinfo.teacher.username;
-  // const tavatar = userinfo.teacher.profilePhoto;
-  // const tauraPoints = userinfo.teacher.auraPoints;
+  const role = userinfo?.user?.role || teacherinfo?.teacher?.role;
+  const tname = teacherinfo.teacher.username;
+  const tavatar = teacherinfo.teacher.profilePhoto;
+  // const tauraPoints = teacherinfo.teacher.auraPoints;
 
   const fetchUserData = async () => {
     try {
@@ -233,12 +233,12 @@ const SideMenu = () => {
           <Link to="/profile" className="flex items-center px-4 -mx-2">
             <img
               className="object-cover mx-2 rounded-full h-9 w-9"
-              src={avatar}
+              src={role==="teacher"?tavatar:avatar}
               alt="avatar"
             />
             <span className="mx-2 font-medium text-gray-800 dark:text-gray-200">
-              {name}
-              {role}
+              {role==="teacher"?tname:name}
+              {/* {role} */}
             </span>
           </Link>
         </div>
