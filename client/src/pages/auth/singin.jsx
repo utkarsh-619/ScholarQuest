@@ -78,7 +78,7 @@ const Signin = () => {
         // Redirect upon successful sign-in or sign-up
         if(isLogIn){
           if(role === "teacher"){
-            navigate("/dashboard");
+            navigate("/teacherDashboard");
           }
           else{
             navigate("/dashboard");

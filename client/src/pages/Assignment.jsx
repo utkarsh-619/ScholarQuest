@@ -5,31 +5,13 @@ import { useSelector } from "react-redux";
 // import axios from "axios";
 
 const Assignment = () => {
-  //   const [subjects, setSubjects] = useState([]);
-  //   const [course, setCourse] = useState(""); // New state for course name
+  
 
   const userinfo = useSelector((state) => state.userinfo);
   const subjects = userinfo.user.courseEnrollments[0].subjects;
   const course = userinfo.user.courseEnrollments[0].courseName;
-
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const courseResponse = await axios.get(
-  //         "http://localhost:8000/api/v1/users/data",
-  //         {
-  //           withCredentials: true,
-  //         }
-  //       );
-  //       setSubjects(courseResponse.data.data.courseEnrollments[0].subjects);
-  //       setCourse(courseResponse.data.data.courseEnrollments[0].courseName);
-  //     } catch (err) {
-  //       console.error("Failed to fetch courses:", err);
-  //     }
-  //   };
-
-  //   useEffect(() => {
-  //     fetchUserData();
-  //   }, []);
+  console.log(userinfo);
+  
 
   return (
     <div className="bg-gray-700 min-h-screen">

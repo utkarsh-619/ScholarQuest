@@ -1,7 +1,10 @@
 import React from "react";
+import { setTemp } from "../redux/userSlice"
+import { Link } from "react-router-dom";
 
 const SubCard = (props) => {
   return (
+    <Link to={`/assignmentSubmission`} onClick={() => dispatch(setTemp(index))} >
     <div className="w-64 lg:p-4 md:p-2 bg-white rounded-lg shadow-md relative overflow-hidden">
       {/* Top Section */}
       <div className="bg-gray-800 text-white p-4 rounded-t-lg relative">
@@ -28,6 +31,7 @@ const SubCard = (props) => {
         </button>
       </div>
     </div>
+    </Link>
   );
 };
 

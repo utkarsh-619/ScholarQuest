@@ -9,6 +9,7 @@ import Signin from './pages/auth/singin';
 import Profile from './pages/Profile';
 import TeacherDashboard from './components/teacherDashboard';
 import { useDispatch, useSelector } from "react-redux";
+import AssignmentSubmission from './pages/AssignmentSubmission';
 
 
 function App() {
@@ -23,11 +24,18 @@ function App() {
         <Route path="/assignment" element={<Assignment />} />
         <Route path="/redeem" element={<Redeem />} />
         <Route path="/subject" element={<Subject />} />
+        <Route path="/assignmentSubmission" element={<AssignmentSubmission/>} />
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signin />} />
         <Route path="/profile" element={<Profile />} />
         {/* <Route path="/teacherDashboard" element={<TeacherDashboard />} /> */}
-        <Route path="/dashboard" element={role === "teacher" ? <TeacherDashboard /> : <Dashboard />} />
+        if(role === "teacher"){
+          <Route path="/teacherDashboard" element={<TeacherDashboard />} />
+        }
+        else{
+          <Route path="/dashboard" element={<Dashboard />}/>
+        }
+        // <Route path="/dashboard" element={role === "teacher" ? <TeacherDashboard /> : <Dashboard />} />
         
       </Routes>
     </Router>
