@@ -12,7 +12,7 @@ const SummaryCard = ({ index, title, value1, value2, color, doughnutData, curren
     <Link to={`/subject`} onClick={() => dispatch(setTemp(index))} >
       <div
         className={`p-6 rounded-lg shadow-md flex items-center ${color} transition duration-200 transform hover:scale-105`}
-        style={{ maxWidth: "300px", minWidth: "250px" }} 
+        style={{ maxWidth: "100px", minWidth: "250px" }} 
       >
         <div className="mr-6 flex-1 overflow-hidden">
           <h3 className="text-xl font-bold text-gray-300 uppercase">{title}</h3>
