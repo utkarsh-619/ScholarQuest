@@ -406,7 +406,8 @@ const assignAssignment = asyncHandler(async (req, res) => {
       studentSubject.assignments.push({
         assignmentName,
         dueDate: new Date(dueDate),
-        assignmentFile: assignmentFile?.url || null,
+        assignmentFile: "",
+        assignmentQuestion: assignmentFile?.url || null,
         status: 'pending',
       });
       await student.save();

@@ -70,9 +70,11 @@ const userSchema = new Schema({
               },
               assignmentQuestion : {
                 type : String,
+                default : "",
               },
               assignmentFile : {
                 type : String,
+                default : "",
               },
               dueDate: {
                 type: Date,
